@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+ PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+ "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+ <context id="dbtable" targetRuntime="MyBatis3">
+   <!-- DBの接続情報を設定 -->
+   <jdbcConnection driverClass="${conf.driverClass}"
+       connectionURL="${conf.connectionUrl}"
+       userId="${conf.userId}"
+       password="${conf.password}">
+   </jdbcConnection>
+
+   <!-- タイプ変換 -->
+   <!-- 数値型（Long, Integer, Short, etc.）をbigdecimalに変更するかの設定。 たぶん省略可能 -->
+   <javaTypeResolver >
+     <property name="forceBigDecimals" value="false" />
+   </javaTypeResolver>
+
+   <!-- Java Model(Entity)クラスの生成先を指定
+       targetPackage : 生成先パッケージ
+       targetProject : プロジェクトディレクトリから生成先パッケージの親ディレクトリまでのパス
+   -->
+   <javaModelGenerator targetPackage="${conf.basePackage}.model" targetProject="${conf.buildDir}java">
+     <property name="enableSubPackages" value="${conf.enableSubPackages}" />
+     <property name="trimStrings" value="true" />
+   </javaModelGenerator>
+
+   <!-- SQL Mapper(Dao)ファイルの生成先を指定
+       targetPackage : 生成先パッケージ
+       targetProject : プロジェクトディレクトリから生成先パッケージの親ディレクトリまでのパス
+   -->
+   <sqlMapGenerator targetPackage="${conf.basePackage}.mapper"  targetProject="${conf.buildDir}resources">
+     <property name="enableSubPackages" value="${conf.enableSubPackages}" />
+   </sqlMapGenerator>
+
+   <!-- Java Clientクラスの生成先を指定     ※Java ClientはSQL Mapperファイルを呼び出すためのインターフェースクラスです。
+       targetPackage : 生成先パッケージ
+       targetProject : プロジェクトディレクトリから生成先パッケージの親ディレクトリまでのパス
+   -->
+   <javaClientGenerator type="${conf.mapperType}" targetPackage="${conf.basePackage}.mapper"  targetProject="${conf.buildDir}java">
+     <property name="enableSubPackages" value="${conf.enableSubPackages}" />
+   </javaClientGenerator>
+
+   <!--  自動生成対象のテーブル名を[tableName]に指定する。 -->
+    <table schema="${conf.schema}" tableName="%"
+            enableInsert="true"
+            enableSelectByPrimaryKey="true"
+            enableSelectByExample="true"
+            enableUpdateByPrimaryKey="true"
+            enableUpdateByExample="false"
+            enableDeleteByPrimaryKey="true"
+            enableDeleteByExample="false"
+            enableCountByExample="false"
+            selectByExampleQueryId="false"
+            modelType="hierarchical">
+    </table>
+ </context>
+</generatorConfiguration>

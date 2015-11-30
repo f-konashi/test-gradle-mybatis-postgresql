@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>ユーザー登録画面(input.html)</h1>
+	<!-- 説明: 
+		・<form action="#">は、ボタンをページの先頭にジャンプするリンクの変わりに使う場合に使用する。
+		・th:object="${}"内には、モデルインスタンス名を指定する。
+		・ID項目に数値以外を入力するとエラーページに移動する(Geetingクラスで宣言されているidフィールドがlong型の為、回避方法現状不明)
+	-->
+    <form action="#" th:action="@{/regist}" method="post">
+        <p>ID: <input type="text" name="id" /></p>
+        <p>名前: <input type="text" name="name" /></p>
+        <p>パスワード: <input type="password" name="pass" /></p>
+        <p><input type="submit" value="登録" /> <input type="reset" value="Reset" /></p>
+    </form>
+    <p><a href="/">TOP画面へ</a></p>
+</body>
+</html>

@@ -1,0 +1,150 @@
+buildscript {
+    apply from: "conf.gradle"
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        // gradleプラグインの依存関係およびライブラリの読み込み。
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        // springbootはflywayを統合できるが、MyBatisGeneratorと合わせて使うのには都合が悪いので
+        // 統合せずにgradleプラグインを利用する。
+        classpath 'org.flywaydb:flyway-gradle-plugin:3.2.1'
+        classpath "${dbSetting.driverArtifactId}:${dbSetting.driverVersion}"
+    }
+}
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'spring-boot'
+apply plugin: 'org.flywaydb.flyway'
+
+/*
+// SpringBoot以外のBOMを利用する場合、下記のように依存BOMを追加する。
+dependencyManagement {
+    imports {
+        mavenBom 'io.spring.platform:platform-bom:2.0.0.RELEASE'
+    }
+}
+*/
+
+jar {
+    baseName = 'springboot-gradle-sample'
+    version = '0.1.0'
+
+    // 依存jar内のクラスも含めて一つのjarに入れるための設定
+    //from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+}
+
+flyway {
+    url = dbSetting.connectionUrl
+    user = dbSetting.userId
+    password = dbSetting.password
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Java Use Version
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+configurations {
+    // mybatisタスクの設定。
+    genMyBatis
+    // jdbcの依存解決に使用する。
+    jdbcResolve
+    if (useLogger != loggers.logback) {
+        compile.exclude module: 'spring-boot-starter-logging'
+    }
+}
+
+// 依存関係設定
+dependencies {
+    // バージョン指定しないライブラリ（SpringBootでVersion管理を行う）
+    // spring-boot
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-test"
+    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-jdbc"
+    compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4'
+    compile useLogger
+
+    // JDBC Driver
+    try {
+        jdbcResolve "${dbSetting.driverArtifactId}"
+        configurations.jdbcResolve.getResolvedConfiguration().getResolvedArtifacts()
+        compile "${dbSetting.driverArtifactId}"
+        logger.warn("JDBC driver dependency is resolved by BOM")
+    } catch (e) {
+        // BOMで解決出来なかった場合はバージョン指定を行う。
+        compile "${dbSetting.driverArtifactId}:${dbSetting.driverVersion}"
+        logger.warn("JDBC driver dependency is resolved by setting")
+    }
+
+    // log4j2でyml設定ファイルを使いたい場合は必要。
+    if (useLogger == loggers.log4j2) {
+        compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+    }
+
+    // MyBatis
+    compile "org.mybatis:mybatis:$myBatisVersion"
+    compile "org.mybatis:mybatis-spring:$myBatisSpringVersion"
+
+    // genMyBatisタスクの依存ライブラリ。
+    genMyBatis "org.mybatis.generator:mybatis-generator-core:${myBatisGeneratorConfig.generatorVersion}"
+    genMyBatis "${dbSetting.driverArtifactId}:${dbSetting.driverVersion}"
+
+    testCompile "junit:junit"
+}
+
+// genMyBatisはMyBatisのジェネレータを実行する。
+task genMyBatis << {
+    myBatisGeneratorConfig.each { key, val ->
+        ant.properties["conf.$key"] = val
+    }
+    dbSetting.each { key, val ->
+        ant.properties["conf.$key"] = val
+    }
+    ant.properties["conf.buildDir"] = projectDir.absolutePath + "/src/main/"
+    ant.taskdef(
+            name: 'genfiles',
+            classname: 'org.mybatis.generator.ant.GeneratorAntTask',
+            classpath: configurations.genMyBatis.asPath)
+    ant.genfiles(
+            overwrite: 'true',
+            configfile: "${projectDir}/src/main/resources/generatorConfig.xml",
+            verbose: 'true') {
+        propertyset {
+            propertyref(prefix: 'conf.')
+        }
+    }
+}
+
+// flywayMigrateのdependsOnの、testClassesがメインのアプリをコンパイルしてしまうのでスキップする。
+// ソースにエラーがあってもマイグレーションやジェネレータが動作しないのはマズいので。
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.hasTask(flywayMigrate)) {
+        compileJava.enabled = false
+        // flywayMigrateのdependsOnで、これだけ必要。
+//        processResources.enabled = false
+        classes.enabled = false
+        compileTestJava.enabled = false
+        processTestResources.enabled = false
+        testClasses.enabled = false
+    }
+}
+// マイグレーション後はMyBatisのジェネレータを必ず実行。
+flywayMigrate.finalizedBy genMyBatis
+
+

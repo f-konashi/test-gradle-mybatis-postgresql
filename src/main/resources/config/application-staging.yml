@@ -1,0 +1,26 @@
+spring:
+  # 開発環境用の設定ファイル
+  profiles: staging
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost/test
+    username: postgres
+    password: hmj
+    #　コネクションプール設定(default)
+    max-active: 100
+    max-idle: 8
+    min-idle: 8
+    initial-size: 10
+  jpa:
+    show-sql: true
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+
+logging:
+    file: app.log
+    path: /var/log
+    level:
+      # TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
+      org.springframework.web: INFO
+

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>トップ画面</title>
+</head>
+<body>
+	<h1>検索結果(test.html)</h1>
+    <table border="1" width="80%">
+        <tr>
+              <td>ID</td>
+              <td>名前</td>
+        </tr>
+        <tr th:each="list : ${testtableList}">
+            <td width="15%"><span th:text="${list.id}"></span></td>
+            <td width="25%"><span th:text="${list.name}"></span></td>
+        </tr>
+    </table>
+</body>
+</html>
