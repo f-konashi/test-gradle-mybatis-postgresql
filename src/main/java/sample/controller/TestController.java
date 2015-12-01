@@ -28,14 +28,17 @@ public class TestController {
 	 */
 	@RequestMapping(value = "/regist", method = RequestMethod.POST)
 	public String insertOne(Model model,
+			@RequestParam("loginId") String loginId,
 			@RequestParam("name") String name,
 			@RequestParam("password") String password,
 			@RequestParam("gender") String gender) {
 		// 入力されたデータを、エンティティークラスに格納する
 		UserInfo userInfo = new UserInfo();
 		userInfo.setName(name);
-		userInfo.setPassword(password);
 		userInfo.setGender(gender);
+		userInfo.setLoginId(loginId);
+		userInfo.setPassword(password);
+		userInfo.setEnabled(true);
 
 		userInfoService.insert(userInfo);
 		return "input";

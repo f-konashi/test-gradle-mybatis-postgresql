@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>検索結果｜自作プロジェクト</title>
+</head>
+<body>
+	<h1>検索結果(serch.html)</h1>
+	<table border="1" style="width: 50%; height: 50%">
+		<tr>
+			<td>ID</td>
+			<td>パスワード</td>
+			<td>名前</td>
+			<td>性別</td>
+		</tr>
+		<tr th:each="list : ${userInfoList}">
+			<td width="15%"><span th:text="${list.userId}"></span></td>
+			<td width="25%"><span th:text="${list.name}"></span></td>
+			<td width="25%"><span th:text="${list.password}"></span></td>
+			<td width="25%"><span th:text="${list.gender}"></span></td>
+		</tr>
+	</table>
+</body>
+</html>
