@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head> 
-    <title>Getting Started: Handling Form Submission</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>ユーザー登録画面｜自作プロジェクト</title>
 </head>
 <body>
 	<h1>ユーザー登録画面(input.html)</h1>
@@ -11,12 +11,32 @@
 		・th:object="${}"内には、モデルインスタンス名を指定する。
 		・ID項目に数値以外を入力するとエラーページに移動する(Geetingクラスで宣言されているidフィールドがlong型の為、回避方法現状不明)
 	-->
-    <form action="#" th:action="@{/regist}" method="post">
-        <p>ID: <input type="text" name="id" /></p>
-        <p>名前: <input type="text" name="name" /></p>
-        <p>パスワード: <input type="password" name="pass" /></p>
-        <p><input type="submit" value="登録" /> <input type="reset" value="Reset" /></p>
-    </form>
-    <p><a href="/">TOP画面へ</a></p>
+	<form action="#" th:action="@{/regist}" method="post">
+	<table border="1" style="width: 50%; height: 50%">
+		<tr>
+			<td>名前</td>
+			<td><input type="text" name="name" /></td>
+		</tr>
+		<tr>
+			<td>性別</td>
+			<td>
+				<input type="radio" name="gender" value="男" checked="checked" /> 男
+				<input type="radio" name="gender" value="女" /> 女
+				<input type="radio" name="gender" value="どちらでもない" /> どちらでもない
+			</td>
+		</tr>
+		<tr>
+			<td>パスワード</td>
+			<td><input type="password" name="password" /></td>
+		</tr>
+		<tr>
+			<td colspan= "2" style="text-align: center;">
+				<input type="submit" value="登録" />
+				<input type="reset" value="リセット" />
+			</td>
+		</tr>
+	</table>
+	</form>
+	<p><a href="/">TOP画面へ</a></p>
 </body>
 </html>

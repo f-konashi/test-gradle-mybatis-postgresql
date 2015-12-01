@@ -14,7 +14,7 @@ spring:
   jpa:
     show-sql: true
   thymeleaf:
-    cache: false
+    cache: false # false : htmlファイル編集時, アプリケーションを再起動しなくても更新が反映するようにする.
     encoding: UTF-8
 
 logging:

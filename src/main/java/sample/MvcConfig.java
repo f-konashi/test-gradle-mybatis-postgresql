@@ -6,9 +6,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 /**
  * コントローラクラスを介さずにログイン画面を表示させるため、ViewController
+ * URLとテンプレートをマッピングするクラス (ブラウザからアクセスされたurlによって、表示するページを設定するクラス)
+ * (ブラウザから入力されるurlと、htmlファイルとを関連づける)
  *
- * @author a-numadate
- *
+ * @author f-konashi
  */
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {

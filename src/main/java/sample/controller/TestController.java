@@ -10,40 +10,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import sample.model.Testtable;
-import sample.service.TesttableService;
+import sample.model.UserInfo;
+import sample.service.UserInfoService;
 
 @Controller
 @EnableAutoConfiguration
 public class TestController {
 	@Autowired
-	// private TesttableService testtableService;
-	private TesttableService testtableService = new TesttableService();
+	private UserInfoService userInfoService;
+	
+//	@Autowired
+//	private TesttableService testtableService;
 	
 	/**
-	 * testtableにユーザー情報を登録する
+	 * ユーザー情報を登録する
 	 * 
 	 */
 	@RequestMapping(value = "/regist", method = RequestMethod.POST)
-	public String insertOne(Model model, @RequestParam("id") String id, @RequestParam("name") String name) {
+	public String insertOne(Model model,
+			@RequestParam("name") String name,
+			@RequestParam("password") String password,
+			@RequestParam("gender") String gender) {
 		// 入力されたデータを、エンティティークラスに格納する
-		Testtable testtable = new Testtable();
-		testtable.setId(id);
-		testtable.setName(name);
+		UserInfo userInfo = new UserInfo();
+		userInfo.setName(name);
+		userInfo.setPassword(password);
+		userInfo.setGender(gender);
 
-		testtableService.insertOne(testtable);
+		userInfoService.insert(userInfo);
 		return "input";
 	}
 
 	/**
-	 * testtableの全件データを画面に出力する。
+	 * 全件データを画面に出力する。
 	 * 
 	 */
-	@RequestMapping(value = "/test")
+	@RequestMapping(value = "/serch")
 	public String selectAll(Model model) {
-		List<Testtable> testtableList = testtableService.getTesttableAll();
-		model.addAttribute("testtableList", testtableList);
-		return "test";
+		List<UserInfo> userInfoList = userInfoService.getAll();
+		model.addAttribute("userInfoList", userInfoList);
+		return "serch";
 
 	}
 
