@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>会員情報確認｜自作プロジェクト</title>
+</head>
+<body>
+	<table border="1" style="width: 50%; height: 50%">
+		<tr>
+			<td>会員ナンバー</td>
+			<td>名前</td>
+			<td>性別</td>
+			<td>ログインID</td>
+			<td>パスワード</td>
+		</tr>
+		<tr th:object="${userInfo}">
+			<td width="15%"><span th:text="*{userId}"></span></td>
+			<td width="25%"><span th:text="*{name}"></span></td>
+			<td width="25%"><span th:text="*{gender}"></span></td>
+			<td width="25%"><span th:text="*{loginId}"></span></td>
+			<td width="25%"><span th:text="*{password}"></span></td>
+		</tr>
+	</table>
+	<p>
+		<a href="/">トップ画面へ</a>
+	</p>
+</body>
+</html>

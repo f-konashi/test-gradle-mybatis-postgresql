@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>会員登録完了画面｜自作プロジェクト</title>
+</head>
+<body>
+	<h1>会員登録完了画面(regist.html)</h1>
+	<p>以下の内容で会員登録完了しました。</p>
+		<table border="1" style="width: 50%; height: 50%">
+		<tr>
+			<td>名前</td>
+			<td th:text="${userInfo.name}"></td>
+		</tr>
+		<tr>
+			<td>性別</td>
+			<td th:text="${userInfo.gender}"></td>
+		</tr>
+		<tr>
+			<td>ログインID</td>
+			<td th:text="${userInfo.loginId}"></td>
+		</tr>
+		<tr>
+			<td>パスワード</td>
+			<td th:text="${userInfo.password}"></td>
+		</tr>
+	</table>
+	<p><a href="/">トップ画面へ</a></p>
+</body>
+</html>

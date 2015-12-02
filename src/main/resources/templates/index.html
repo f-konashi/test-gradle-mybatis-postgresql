@@ -1,12 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8" />
-<title>トップ画面</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>トップ画面｜自作プロジェクト</title>
 </head>
 <body>
 	<h1>トップ画面(index.html)</h1>
-	<p><a href="/serch">検索</a></p>
-	<p><a href="/input">登録</a></p>
+	<!-- ログイン認証済かどうか確認する -->
+	<p th:if="${#authorization.expression('isAuthenticated()')}">あなたはログイン済です</p>
+	<p th:if="${#authorization.expression('isAuthenticated()') == false}">あなたはログインしてません</p>
+	<!-- 未ログイン時の表示メニューここから -->
+	<div th:if="${#httpServletRequest.remoteUser == null}">
+	 	<p>こんにちは　<span>ゲスト</span>　さん</p>
+		<p><a href="/input">1.会員登録する</a></p>
+		<p><a href="/login">2.ログインする</a></p>
+	</div>
+ 	<!-- 未ログイン時の表示メニューここまで -->
+	
+	<!-- 既ログイン時の表示メニューここから -->
+	<div th:if="${#httpServletRequest.remoteUser != null}">
+		<p th:inline="text">
+	 		こんにちは　<span>[[${#httpServletRequest.remoteUser}]]　</span>さん
+	 	</p>
+		<p><a href="/mypage">1.会員情報確認</a></p>
+		<form th:action="@{/logout}" method="post">
+	    	<input type="submit" value="ログアウト"/>
+	    </form>
+    </div>
+	<!-- 既ログイン時の表示メニューここまで -->
 </body>
 </html>

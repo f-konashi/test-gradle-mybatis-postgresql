@@ -9,22 +9,33 @@ import sample.model.UserInfo;
 
 /**
  * 認証情報を設定するためのクラス
+ * (認証済ユーザーの情報を格納したエンティティクラス)
  *
  * @author f-konashi
  *
  */
 public class MyUserDetails extends User {
 	private static final long serialVersionUID = 1L;
-	private final String orgName;
+	private final Integer userId;
+	private final String loginId;
+	private final String name;
 
 	public MyUserDetails(UserInfo userInfo, List<? extends GrantedAuthority> authorityList) {
-		// 「userInfo.getName」から「Integer.toString(userInfo.getUserId())に変更
-		super(Integer.toString(userInfo.getUserId()), userInfo.getPassword(), true, true, true, true, authorityList);
-		// 「userInfo.getOrganizationName()」から「userInfo.getName()」に変更
-		this.orgName = userInfo.getName();
+		super(userInfo.getName(), userInfo.getPassword(), true, true, true, true, authorityList);
+		this.userId = userInfo.getUserId();
+		this.loginId = userInfo.getLoginId();
+		this.name = userInfo.getName();
 	}
 
-	public String getOrgName() {
-		return orgName;
+	public Integer getUserId() {
+		return userId;
+	}
+	
+	public String getLoginId() {
+		return loginId;
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

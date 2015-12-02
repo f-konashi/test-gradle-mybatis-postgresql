@@ -7,35 +7,41 @@ import sample.model.UserInfo;
 
 import java.util.List;
 
+/**
+ * サービスクラス
+ * @author f-konashi
+ */
 @Service
 public class UserInfoService {
 	@Autowired
 	private UserInfoMapper userInfoMapper;
 
 	/**
-	 * テーブルデータを全件取得する
+	 * ユーザーデータを全件取得する。
 	 * 
-	 * @return 全件リスト
+	 * @return データベースに登録されている全ユーザー情報
 	 */
-	public List<UserInfo> getAll() {
+	public List<UserInfo> getUserAll() {
 		return userInfoMapper.getAll();
-	}
-
-	/**
-	 * テーブルデータを１件挿入する
-	 * 
-	 * @return　挿入件数
-	 */
-	public int insert(UserInfo userInfo) {
-		return userInfoMapper.insertOne(userInfo);
 	}
 	
     /**
-     * IDで検索した結果を取得し返却する
+     *　ログインIDで検索した結果を取得する。
      *
-     * @return　UserInfo　検索結果
+     *　@param String ログインID
+     * @return　UserInfo　検索に該当したユーザー情報
      */
     public UserInfo getUserByLoginId(String loginId) {
         return userInfoMapper.selectByLoginId(loginId);
     }
+
+	/**
+	 * 入力されたユーザーデータをデータベースに１件挿入する。
+	 * 
+	 * @param String ユーザー情報
+	 * @return　DBに挿入された件数
+	 */
+	public int registUser(UserInfo userInfo) {
+		return userInfoMapper.insertOne(userInfo);
+	}
 }
