@@ -19,8 +19,8 @@ CREATE SEQUENCE BuyingID_seq start 10001;
 CREATE TABLE user_info
 	(
 		user_id SERIAL PRIMARY KEY,		-- ユーザー管理番号(主キー)
-		login_id VARCHAR(255) NOT NULL,	-- ログインID
-		password VARCHAR(255) NOT NULL,	-- ログインパスワード
+		login_id VARCHAR(255) NOT NULL UNIQUE,	-- ログインID
+		password VARCHAR(255) NOT NULL,	-- ログインPW
 		name VARCHAR(255) NOT NULL,		-- 氏名(画面表示名)
 		gender VARCHAR(1) NOT NULL,		-- 性別
 		enabled BOOLEAN					-- アカウント有効性(true = 有効)
@@ -63,7 +63,8 @@ CREATE TABLE buying_history
 -- ************************************
 
 -- user_infoテーブルに挿入:
-INSERT INTO user_info (login_id, password, name, gender, enabled) VALUES ('user', 'pass', '小梨文博', '男',true);
+-- passwordは、「pass」を暗号化したもの
+INSERT INTO user_info (login_id, password, name, gender, enabled) VALUES ('user', 'eb5aac9753c02eb6ca6f3ab4004f78965bebb9acf857b1357b5e7db0c21f7356281fb62a957c64dc', '小梨文博', '男', true);
 
 -- user_authorityテーブルに挿入:
 INSERT INTO user_authority (user_id, authority) VALUES (1, 'user');

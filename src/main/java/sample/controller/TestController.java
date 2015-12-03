@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,21 +24,25 @@ public class TestController {
 	private UserInfoService userInfoService;
 
 	/**
-	 * 会員情報を登録する。
+	 * 会員情報を登録する
 	 * 
 	 */
 	@RequestMapping(value = "/regist", method = RequestMethod.POST)
 	public String insertOne(Model model, @RequestParam("loginId") String loginId, @RequestParam("name") String name,
 			@RequestParam("password") String password, @RequestParam("gender") String gender) {
-		// 入力されたデータを、エンティティークラスに格納する。
+		// 入力されたデータを、エンティティークラスに格納する
 		UserInfo userInfo = new UserInfo();
 		userInfo.setName(name);
 		userInfo.setGender(gender);
 		userInfo.setLoginId(loginId);
-		userInfo.setPassword(password);
 		userInfo.setEnabled(true);
 
-		// 入力されたデータを登録する。
+		// パスワードは、エンティティクラスに登録する前にハッシュ化する
+		// userInfo.setPassword(password);　←　ハッシュ化しない
+		// userInfo.setPassword(new ShaPasswordEncoder(256).encodePassword(password, null));
+		userInfo.setPassword(new StandardPasswordEncoder().encode(password));
+
+		// 入力されたデータを登録する
 		userInfoService.registUser(userInfo);
 
 		model.addAttribute("userInfo", userInfo);
@@ -45,7 +50,7 @@ public class TestController {
 	}
 
 	/**
-	 * 全会員情報を画面に出力する。
+	 * 全会員情報を画面に出力する
 	 * 
 	 */
 	@RequestMapping(value = "/serch")
@@ -56,7 +61,7 @@ public class TestController {
 	}
 
 	/**
-	 * 個別会員情報を画面に出力する。
+	 * 個別会員情報を画面に出力する
 	 * 
 	 */
 	@RequestMapping(value = "/mypage")
@@ -71,7 +76,8 @@ public class TestController {
 	}
 
 	/**
-	 * 個別会員情報を画面に出力する。
+	 * 個別会員情報を画面に出力する
+	 * 
 	 * 
 	 */
 	@RequestMapping(value = "/shoppingcart")

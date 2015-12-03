@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import sample.security.MyUserDetailsService;
 
@@ -79,9 +80,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configureGlobal2(AuthenticationManagerBuilder auth) throws Exception {
         auth
             // ユーザー認証処理
-            .userDetailsService(myUserDetailsService());
+            .userDetailsService(myUserDetailsService())
             // パスワード認証処理(入力されたパスワードを暗号化する。記述しない場合は入力されたパスワードのままDBに問い合わせる)
-//            .passwordEncoder(new ShaPasswordEncoder(256));
+        	//.passwordEncoder(new ShaPasswordEncoder(256));
+            .passwordEncoder(new StandardPasswordEncoder());
     }
 
     @Bean

@@ -12,4 +12,3 @@ DROP TABLE user_info;
 
 DROP SEQUENCE BuyingID_seq;
 DROP SEQUENCE ItemID_seq;
-DROP SEQUENCE UserID_seq;
