@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>買い物かご｜自作プロジェクト</title>
+</head>
+<body>
+	<h1>買い物かご画面(shoppingcart.html)</h1>
+	<p>買い物かごの中身</p>
+	<p th:inline="text">商品管理番号：[[${itemId}]]を、買い物かごに入れました。</p>
+	<p><a href="/">トップ画面へ</a></p>
+</body>
+</html>

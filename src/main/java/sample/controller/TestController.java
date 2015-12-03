@@ -1,10 +1,11 @@
 package sample.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,7 @@ public class TestController {
 		userInfo.setLoginId(loginId);
 		userInfo.setPassword(password);
 		userInfo.setEnabled(true);
-		
+
 		// 入力されたデータを登録する。
 		userInfoService.registUser(userInfo);
 
@@ -53,17 +54,31 @@ public class TestController {
 		model.addAttribute("userInfoList", userInfoList);
 		return "serch";
 	}
-	
+
 	/**
 	 * 個別会員情報を画面に出力する。
 	 * 
 	 */
 	@RequestMapping(value = "/mypage")
-	public String displayUser(Model model, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+	public String displayUser(Model model, Principal principal) {
+		Authentication auth = (Authentication) principal;
+		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
+
 		// ログインユーザー名からユーザー情報を取得する
 		UserInfo userInfo = userInfoService.getUserByLoginId(myUserDetails.getLoginId());
 		model.addAttribute("userInfo", userInfo);
 		return "mypage";
+	}
+
+	/**
+	 * 個別会員情報を画面に出力する。
+	 * 
+	 */
+	@RequestMapping(value = "/shoppingcart")
+	public String displayShoppingcart(Model model, @RequestParam("itemId") String itemId) {
+
+		model.addAttribute("itemId", itemId);
+		return "shoppingcart";
 	}
 
 }

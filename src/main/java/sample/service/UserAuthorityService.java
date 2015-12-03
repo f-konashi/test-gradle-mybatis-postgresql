@@ -22,7 +22,7 @@ public class UserAuthorityService {
 	 *
 	 * @return List<UserAuthority> 検索結果
 	 */
-	public List<UserAuthority> getUserAuthorityByLoginId(String loginId) {
-		return userAuthorityMapper.selectByLoginId(loginId);
+	public List<UserAuthority> getUserAuthorityByUserId(Integer userId) {
+		return userAuthorityMapper.selectByUserId(userId);
 	}
 }
