@@ -88,7 +88,14 @@ public interface ItemInCartMapper {
     /**
      * 
      * @param loginId: 会員管理番号
-     * @return int:　削除件数
+     * @return int:　削除されたレコード件数
      */
     int deleteItemByUserId(Integer userId);
+    
+    /**
+     * 
+     * @param cartId: 買い物かご管理番号
+     * @return int:　削除されたレコード件数
+     */
+    int deleteItemInCartByCartId(Integer cartId);
 }

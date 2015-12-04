@@ -12,11 +12,11 @@
 
 	<h2>現在の買い物かごの中身</h2>
 	<!--/* start▼買い物かごに入れている商品がない場合のみ表示する▼ */-->
-	<P th:if="${itemListInCart.size() == 0}">現在、買い物かごに入っている商品はありません。</P>
+	<P th:if="${itemInCartList.size() == 0}">現在、買い物かごに入っている商品はありません。</P>
 	<!--/* end  ▲買い物かごに入れている商品がない場合のみ表示する▲ */-->
 	
 	<!--/* start▼買い物かごに入れている商品がある場合のみ表示する▼ */-->
-	<div th:if="${itemListInCart.size() != 0}">
+	<div th:if="${itemInCartList.size() != 0}">
 		<table border="1" style="width: 50%; height: 50%">
 			<tr>
 				<td>商品管理番号</td>
@@ -26,7 +26,7 @@
 				<td>注文個数</td>
 				<td>削除</td>
 			</tr>
-			<tr th:each="list : ${itemListInCart}">
+			<tr th:each="list : ${itemInCartList}">
 				<td width="15%"><span th:text="${list.itemId}"></span></td>
 				<td width="25%"><span th:text="${list.name}"></span></td>
 				<td width="25%"><span th:text="${list.price}">円</span></td>
@@ -34,7 +34,7 @@
 				<td width="25%"><span th:text="${list.itemCount}"></span></td>
 				<td width="25%">
 					<form action="#" th:action="@{/deleteItemInCart}" method="post">
-						<input type="hidden" th:value="${list.itemId}" />
+						<input type="hidden" name="cartId" th:value="${list.cartId}" />
 						<input type="submit" value="削除" />
 					</form>
 				</td>

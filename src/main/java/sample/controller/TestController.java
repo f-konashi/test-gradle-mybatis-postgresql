@@ -111,8 +111,9 @@ public class TestController {
 		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
 
 		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
-		List<ItemInfoEx> itemListInCart = itemInCartService.getItemInCart(myUserDetails.getUserId());
-		model.addAttribute("itemListInCart", itemListInCart);
+		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(myUserDetails.getUserId());
+		model.addAttribute("itemInCartList", itemInCartList);
+		
 		return "shoppingcart";
 	}
 
@@ -137,8 +138,8 @@ public class TestController {
 		itemInCartService.setItemInCart(itemInCart);
 
 		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
-		List<ItemInfoEx> itemListInCart = itemInCartService.getItemInCart(myUserDetails.getUserId());
-		model.addAttribute("itemListInCart", itemListInCart);
+		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(myUserDetails.getUserId());
+		model.addAttribute("itemInCartList", itemInCartList);
 		model.addAttribute("itemId", itemId);
 		return "shoppingcart";
 	}
@@ -150,8 +151,19 @@ public class TestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/deleteItemInCart")
-	public String deleteItemInCart(Model model, Principal principal) {
-
+	public String deleteItemInCart(Model model, Principal principal,
+			@RequestParam("cartId") Integer cartId) {
+		// ログイン済の会員情報を取得する。
+		Authentication auth = (Authentication) principal;
+		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
+		
+		// 選択された商品を削除する。
+		itemInCartService.deleteItemInCart(cartId);
+		
+		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
+		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(myUserDetails.getUserId());
+		model.addAttribute("itemInCartList", itemInCartList);
+		
 		return "shoppingcart";
 	}
 
@@ -171,8 +183,8 @@ public class TestController {
 		itemInCartService.deleteItemAllInCart(myUserDetails.getUserId());
 
 		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
-		List<ItemInfoEx> itemListInCart = itemInCartService.getItemInCart(myUserDetails.getUserId());
-		model.addAttribute("itemListInCart", itemListInCart);
+		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(myUserDetails.getUserId());
+		model.addAttribute("itemInCartList", itemInCartList);
 
 		return "shoppingcart";
 	}

@@ -52,6 +52,18 @@ public class ItemInCartService {
 	 * @return int 削除された件数
 	 * 	・null値がリターンされることはない。
 	 */
+	public int deleteItemInCart(Integer cartid) {
+		return itemInCartMapper.deleteItemInCartByCartId(cartid);
+	}
+	
+	
+	/**
+	 * 
+	 * 
+	 * @param userId　
+	 * @return int 削除された件数
+	 * 	・null値がリターンされることはない。
+	 */
 	public int deleteItemAllInCart(Integer userId) {
 		return itemInCartMapper.deleteItemByUserId(userId);
 	}

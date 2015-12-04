@@ -191,7 +191,7 @@
     values (#{userId,jdbcType=INTEGER}, #{itemId,jdbcType=INTEGER}, #{itemCount,jdbcType=INTEGER})
   </insert>
   <select id="selectItemInCart" parameterType="sample.model.ItemInCart" resultMap="BaseResultMap2">
-  	SELECT	item_info.item_id, name, price, postage, item_count
+  	SELECT	cart_id, item_info.item_id, name, price, postage, item_count
 	FROM	item_in_cart, item_info
 	WHERE	item_in_cart.item_id = item_info.item_id
 	AND		user_id = #{itemId,jdbcType=INTEGER};
@@ -199,6 +199,10 @@
   <delete id="deleteItemByUserId" parameterType="sample.model.ItemInCart">
     delete from public.item_in_cart
     where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteItemInCartByCartId" parameterType="sample.model.ItemInCart">
+    delete from public.item_in_cart
+    where cart_id = #{cartId,jdbcType=INTEGER}
   </delete>
   <!-- end  ▲追加▲ -->
 </mapper>
