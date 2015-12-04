@@ -13,36 +13,52 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import sample.model.ItemInCart;
+import sample.model.ItemInfoEx;
 import sample.model.UserInfo;
 import sample.security.MyUserDetails;
+import sample.service.ItemInCartService;
 import sample.service.UserInfoService;
 
+/**
+ * コントローラークラスです。
+ * 
+ * @author f-konashi
+ *
+ */
 @Controller
 @EnableAutoConfiguration
 public class TestController {
 	@Autowired
 	private UserInfoService userInfoService;
 
+	@Autowired
+	private ItemInCartService itemInCartService;
+
 	/**
-	 * 会員情報を登録する
+	 * 会員情報を登録し、登録完了画面を出力します。
 	 * 
+	 * @param
+	 * @return
 	 */
 	@RequestMapping(value = "/regist", method = RequestMethod.POST)
 	public String insertOne(Model model, @RequestParam("loginId") String loginId, @RequestParam("name") String name,
 			@RequestParam("password") String password, @RequestParam("gender") String gender) {
-		// 入力されたデータを、エンティティークラスに格納する
+
+		// 入力されたデータを、エンティティークラスに格納する。
 		UserInfo userInfo = new UserInfo();
 		userInfo.setName(name);
 		userInfo.setGender(gender);
 		userInfo.setLoginId(loginId);
 		userInfo.setEnabled(true);
 
-		// パスワードは、エンティティクラスに登録する前にハッシュ化する
-		// userInfo.setPassword(password);　←　ハッシュ化しない
-		// userInfo.setPassword(new ShaPasswordEncoder(256).encodePassword(password, null));
+		// パスワードは、エンティティクラスに登録する前にハッシュ化する。
+		// userInfo.setPassword(password); ← ハッシュ化しない
+		// userInfo.setPassword(new
+		// ShaPasswordEncoder(256).encodePassword(password, null));
 		userInfo.setPassword(new StandardPasswordEncoder().encode(password));
 
-		// 入力されたデータを登録する
+		// 入力されたデータを登録する。
 		userInfoService.registUser(userInfo);
 
 		model.addAttribute("userInfo", userInfo);
@@ -50,8 +66,10 @@ public class TestController {
 	}
 
 	/**
-	 * 全会員情報を画面に出力する
+	 * 全会員情報を画面に出力します。
 	 * 
+	 * @param
+	 * @return
 	 */
 	@RequestMapping(value = "/serch")
 	public String displayUserAll(Model model) {
@@ -61,30 +79,101 @@ public class TestController {
 	}
 
 	/**
-	 * 個別会員情報を画面に出力する
+	 * 個別会員情報を画面に出力します。
 	 * 
+	 * @param
+	 * @return
 	 */
 	@RequestMapping(value = "/mypage")
 	public String displayUser(Model model, Principal principal) {
+		// ログイン済の会員情報を取得する。
 		Authentication auth = (Authentication) principal;
 		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
 
-		// ログインユーザー名からユーザー情報を取得する
+		// 個別会員情報を取得する。
 		UserInfo userInfo = userInfoService.getUserByLoginId(myUserDetails.getLoginId());
+
+		// 個別会員情報を、modelに格納する。
 		model.addAttribute("userInfo", userInfo);
 		return "mypage";
 	}
 
 	/**
-	 * 個別会員情報を画面に出力する
+	 * 買い物かご画面を出力します。
 	 * 
-	 * 
+	 * @param
+	 * @return
 	 */
 	@RequestMapping(value = "/shoppingcart")
-	public String displayShoppingcart(Model model, @RequestParam("itemId") String itemId) {
+	public String DisplayCart(Model model, Principal principal) {
+		// ログイン済の会員情報を取得する。
+		Authentication auth = (Authentication) principal;
+		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
 
+		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
+		List<ItemInfoEx> itemListInCart = itemInCartService.getItemInCart(myUserDetails.getUserId());
+		model.addAttribute("itemListInCart", itemListInCart);
+		return "shoppingcart";
+	}
+
+	/**
+	 * 「買い物かごに入れる」ボタンがクリックされた商品を、その会員の買い物かごに登録し、買い物かご画面を出力します。
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping(value = "/addItemInCart")
+	public String addItemAndDisplayCart(Model model, Principal principal, @RequestParam("itemId") Integer itemId,
+			@RequestParam("itemCount") Integer itemCount) {
+		// ログイン済の会員情報を取得する。
+		Authentication auth = (Authentication) principal;
+		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
+
+		// クリックされた商品を、買い物かごに追加する。
+		ItemInCart itemInCart = new ItemInCart();
+		itemInCart.setUserId(myUserDetails.getUserId());
+		itemInCart.setItemId(itemId);
+		itemInCart.setItemCount(itemCount);
+		itemInCartService.setItemInCart(itemInCart);
+
+		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
+		List<ItemInfoEx> itemListInCart = itemInCartService.getItemInCart(myUserDetails.getUserId());
+		model.addAttribute("itemListInCart", itemListInCart);
 		model.addAttribute("itemId", itemId);
 		return "shoppingcart";
 	}
 
+	/**
+	 * 買い物かご内から、 「削除」ボタンがクリックされた商品のみ削除する。
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteItemInCart")
+	public String deleteItemInCart(Model model, Principal principal) {
+
+		return "shoppingcart";
+	}
+
+	/**
+	 * 買い物かご内から、 全商品を削除する。
+	 * 
+	 * @param
+	 * @return
+	 */
+	@RequestMapping(value = "/deleteItemAllInCart")
+	public String deleteItemAllInCart(Model model, Principal principal) {
+		// ログイン済の会員情報を取得する。
+		Authentication auth = (Authentication) principal;
+		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
+
+		// 買い物かご内の全商品を削除する。
+		itemInCartService.deleteItemAllInCart(myUserDetails.getUserId());
+
+		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
+		List<ItemInfoEx> itemListInCart = itemInCartService.getItemInCart(myUserDetails.getUserId());
+		model.addAttribute("itemListInCart", itemListInCart);
+
+		return "shoppingcart";
+	}
 }

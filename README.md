@@ -6,27 +6,39 @@
     	username: postgres
     	password: hmj
     	
-	テーブル設定：
+	TABLE設定：
 		・プロジェクトフォルダ直下のcreate_table.sqlで、テーブル作成・サンプルデータの登録が可能。
 		・「drop_table.sql」で、登録した上記テーブルの削除が可能。
 
-	ログイン方法：
+	ログイン設定：
 		デフォルトで、下記ID・PWでログイン可能。
 		ID: user
 		PW: pass
 
 ▼開発環境
 
-	[Spring4]
+	［開発言語］
+	Java(Version:8)
 	
-	[Gradle]
+	[フレームワーク]
+	Spring Boot(Version:　1.3.0.RELEASE)
+	Spring Security(Version:　4.2.3.RELEASE)
 	
-	[Mybatis]
+	[IDE]
+	Spring Tool Suite(Version: 3.7.1.RELEASE)
 	
-	[Mybatis　Generator]
+	[BuildTool]
+	Gradle(Version:)
 	
-	[postgresql]
-	バージョン9.4
+	[テンプレート・エンジン]
+	Thymeleaf(Version:)
+	
+	[ORM]
+	Mybatis(Version:3.3.0)
+	Mybatis　Generator(Version:)
+	
+	[Database]
+	postgresql(Version:9.4)
 
 ▼実装点
 2015/12/03
