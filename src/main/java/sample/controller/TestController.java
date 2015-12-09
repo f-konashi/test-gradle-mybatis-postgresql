@@ -14,14 +14,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import sample.model.ItemInCart;
+import sample.model.ItemInfo;
 import sample.model.ItemInfoEx;
 import sample.model.UserInfo;
 import sample.security.MyUserDetails;
 import sample.service.ItemInCartService;
+import sample.service.ItemInfoService;
 import sample.service.UserInfoService;
 
 /**
- * コントローラークラスです。
+ * アプリケーション全体を制御するクラス(コントローラークラス)です.
  * 
  * @author f-konashi
  *
@@ -33,13 +35,31 @@ public class TestController {
 	private UserInfoService userInfoService;
 
 	@Autowired
+	private ItemInfoService itemInfoService;
+
+	@Autowired
 	private ItemInCartService itemInCartService;
 
 	/**
-	 * 会員情報を登録し、登録完了画面を出力します。
+	 * トップページを表示します.
 	 * 
-	 * @param
-	 * @return
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return ブラウザに表示するhtmlページ
+	 * 
+	 */
+	@RequestMapping(value = {"/", "/index"})
+	public String displayIndexHtml(Model model) {
+		// 全商品一覧データを取得し、モデルに格納する.
+		List<ItemInfo> itemInfoList = getItemInfoAll();
+		model.addAttribute("itemInfoList", itemInfoList);
+		
+		return "index";
+	}
+	/**
+	 * 会員情報を登録し、登録完了画面を出力します.
+	 * 
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return　ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/regist", method = RequestMethod.POST)
 	public String insertOne(Model model, @RequestParam("loginId") String loginId, @RequestParam("name") String name,
@@ -66,10 +86,10 @@ public class TestController {
 	}
 
 	/**
-	 * 全会員情報を画面に出力します。
+	 * 全会員情報を画面に出力します.
 	 * 
-	 * @param
-	 * @return
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return　ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/serch")
 	public String displayUserAll(Model model) {
@@ -81,8 +101,8 @@ public class TestController {
 	/**
 	 * 個別会員情報を画面に出力します。
 	 * 
-	 * @param
-	 * @return
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return　ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/mypage")
 	public String displayUser(Model model, Principal principal) {
@@ -101,8 +121,8 @@ public class TestController {
 	/**
 	 * 買い物かご画面を出力します。
 	 * 
-	 * @param
-	 * @return
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return　ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/shoppingcart")
 	public String DisplayCart(Model model, Principal principal) {
@@ -113,15 +133,15 @@ public class TestController {
 		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
 		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(myUserDetails.getUserId());
 		model.addAttribute("itemInCartList", itemInCartList);
-		
+
 		return "shoppingcart";
 	}
 
 	/**
 	 * 「買い物かごに入れる」ボタンがクリックされた商品を、その会員の買い物かごに登録し、買い物かご画面を出力します。
 	 * 
-	 * @param
-	 * @return
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return　ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/addItemInCart")
 	public String addItemAndDisplayCart(Model model, Principal principal, @RequestParam("itemId") Integer itemId,
@@ -147,31 +167,30 @@ public class TestController {
 	/**
 	 * 買い物かご内から、 「削除」ボタンがクリックされた商品のみ削除する。
 	 * 
-	 * @param
-	 * @return
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return　ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/deleteItemInCart")
-	public String deleteItemInCart(Model model, Principal principal,
-			@RequestParam("cartId") Integer cartId) {
+	public String deleteItemInCart(Model model, Principal principal, @RequestParam("cartId") Integer cartId) {
 		// ログイン済の会員情報を取得する。
 		Authentication auth = (Authentication) principal;
 		MyUserDetails myUserDetails = (MyUserDetails) auth.getPrincipal();
-		
+
 		// 選択された商品を削除する。
 		itemInCartService.deleteItemInCart(cartId);
-		
+
 		// 買い物かごに入っている商品一覧を取得し、modelに格納する。
 		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(myUserDetails.getUserId());
 		model.addAttribute("itemInCartList", itemInCartList);
-		
+
 		return "shoppingcart";
 	}
 
 	/**
 	 * 買い物かご内から、 全商品を削除する。
 	 * 
-	 * @param
-	 * @return
+	 * @param　Model htmlページに渡したいデータを格納する
+	 * @return　ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/deleteItemAllInCart")
 	public String deleteItemAllInCart(Model model, Principal principal) {
@@ -187,5 +206,16 @@ public class TestController {
 		model.addAttribute("itemInCartList", itemInCartList);
 
 		return "shoppingcart";
+	}
+
+	/**
+	 * データベースに登録されている全商品データを取得します.
+	 * 
+	 * @param なし
+	 * @return データベースに登録されている全商品データ
+	 */
+	private List<ItemInfo> getItemInfoAll() {
+		// 全商品一覧を取得し、リターンする.
+		return itemInfoService.getItemAll();
 	}
 }
