@@ -79,6 +79,10 @@ dependencies {
     compile 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4'
     compile useLogger
+    
+    // 追加ここから
+    compile 'org.hibernate:hibernate-validator:4.2.0.Final'
+    // 追加ここまで
 
     // JDBC Driver
     try {

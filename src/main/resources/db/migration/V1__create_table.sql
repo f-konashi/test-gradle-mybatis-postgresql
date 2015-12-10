@@ -58,17 +58,17 @@ CREATE TABLE item_in_cart
 
 -- buying_history: 商品の購入履歴を管理するテーブル
 CREATE TABLE buying_history
-	(
-		 buying_id		 SERIAL			PRIMARY KEY,	-- 購入管理番号(主キー)
-		 user_id		 INT			NOT NULL,		-- ユーザー管理番号(外部キー)
-		 item_id		 INT			NOT NULL,		-- 商品管理番号(外部キー)
-		 buying_count	 INT			NOT NULL,		-- 購入個数
-		 buying_date	 DATE			NOT NULL,		-- 購入日
-		 payment_method  VARCHAR(255)	NOT NULL,		-- 決済方法
-		 delivery_method VARCHAR(255)	NOT NULL,		-- 配送方法
-		 FOREIGN KEY (user_id) REFERENCES user_info(user_id),	-- user_infoテーブルのuser_idを参照する
-		 FOREIGN KEY (item_id) REFERENCES item_info(item_id)	-- item_infoテーブルのitem_idを参照する
-	);
+    (
+         buying_id   SERIAL       PRIMARY KEY, -- 購入管理番号(主キー)
+         user_id     INT          NOT NULL,    -- ユーザー管理番号(外部キー)
+         buying_date DATE         NOT NULL,    -- 購入日
+         payment     VARCHAR(255) NOT NULL,    -- 決済方法
+         delivery    VARCHAR(255) NOT NULL,    -- 配送方法
+         postage     INT          NOT NULL,    -- 送料
+         total_price INT          NOT NULL,    -- 合計金額
+         
+         FOREIGN KEY (user_id) REFERENCES user_info(user_id)  -- user_infoテーブルのuser_idを参照する
+    );
 
 -- ************************************
 -- データ挿入
@@ -96,6 +96,6 @@ INSERT INTO item_in_cart(user_id, item_id, item_count) VALUES(1, 4, 3);
 -- buying_history テーブルに挿入:
 INSERT INTO 
 	buying_history 
-	(user_id, item_id, buying_count, buying_date, payment_method, delivery_method) 
+	(user_id, buying_date, payment, delivery, postage, total_price) 
 	VALUES 
-	(1, 2, 2, '2015/12/02', '銀行振込', 'クロネコヤマト');
+	(1, '2015/12/02', '銀行振込', 'クロネコヤマト', 500, 2500);

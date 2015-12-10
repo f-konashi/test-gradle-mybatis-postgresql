@@ -23,7 +23,7 @@ public class ItemInCartService {
 	 * 「買い物かごに入れる」ボタンがクリックされた商品を、クリックした会員の買い物かごに追加する。
 	 * 
 	 *　@param 
-	 *	Integer userId: 会員管理番号 
+	 *	Integer userId: 会員管理番号
 	 *	Integer itemId: 商品管理番号
 	 *	Integer itemCount:　商品個数
 	 *

@@ -4,6 +4,8 @@ public class ItemInfoEx extends ItemInfo {
 	private Integer cartId;
 	
 	private Integer itemCount;
+	
+	private Integer subtotal;
 
 	public Integer getItemCount() {
         return itemCount;
@@ -19,5 +21,13 @@ public class ItemInfoEx extends ItemInfo {
 	
     public void setCartId(Integer cartId) {
         this.cartId = cartId;
+    }
+    
+	public Integer getSubtotal() {
+        return subtotal;
+    }
+	
+    public void setSubtotal(Integer subtotal) {
+        this.subtotal = subtotal;
     }
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>決済画面｜自作プロジェクト</title>
+</head>
+<body>
+	<h1>決済画面(orderform.html)</h1>
+	<!--/* begin▼商品の小計金額と合計金額を表示する▼ */-->
+	<h2>(1)注文商品確認</h2>
+	<table border="1" style="width: 50%; height: 50%">
+		<tr>
+			<td>商品管理番号</td>
+			<td>商品名</td>
+			<td>単価</td>
+			<td>注文個数</td>
+			<td>小計(税込)</td>
+		</tr>
+		<tr th:each="item : ${itemInfoInCartList}">
+			<td width="15%"><span th:text="${item.itemId}"></span></td>
+			<td width="25%"><span th:text="${item.name}"></span></td>
+			<td width="25%"><span th:text="${item.price}"></span>円</td>
+			<td width="25%"><span th:text="${item.itemCount}"></span></td>
+			<td width="25%" style="font-weight: bolder"><span th:text="${item.Subtotal}"></span>円</td>
+		</tr>
+		<tr>
+			<td width="15%" colspan="4">送料</td>
+			<td style="font-weight: bolder"><span th:text="${postage}"></span>円</td>
+		</tr>
+		<tr>
+			<td width="15%" colspan="4">合計金額(税込)</td>
+			<td style="font-weight: bolder"><span th:text="${total}"></span>円</td>
+		</tr>
+	</table>
+	<!--/* end  ▲商品の小計金額と合計金額を表示する▲ */-->
+	
+	<!--/* begin▼注文情報入力フォーム▼ */-->
+	<form action="#" th:action="@{/orderComplete}" method="post">
+		<h2>(2)配送先住所入力</h2>
+		郵便番号<input type="text" name="address" /><br />
+		住所　　　<input type="text" name="address" />
+	
+		<h2>(3)決済方法選択</h2>		
+		<input type="radio" name="payment" value="クレジットカード" checked="checked" />クレジットカード
+		<input type="radio" name="payment" value="銀行振込" />銀行振込
+		<input type="radio" name="payment" value="代金引換" />代金引換
+		
+		<h2>(4)配送方法選択</h2>
+		<input type="radio" name="delivery" value="クロネコヤマト" checked="checked" />クロネコヤマト
+		<input type="radio" name="delivery" value="佐川急便" />佐川急便
+		<input type="radio" name="delivery" value="ゆうパック" />ゆうパック
+		
+		<br />
+		<br />
+		<input type="submit" value="この内容で注文を確定する" />
+	</form>
+	<!--/* end  ▲注文情報入力フォーム▲ */-->
+</body>
+</html>
