@@ -35,21 +35,49 @@
 	<!--/* end  ▲商品の小計金額と合計金額を表示する▲ */-->
 	
 	<!--/* begin▼注文情報入力フォーム▼ */-->
-	<form action="#" th:action="@{/orderComplete}" method="post">
+	<form th:action="@{/orderComplete}" th:object="${orderInfoForm}" method="post">
 		<h2>(2)配送先住所入力</h2>
-		郵便番号<input type="text" name="address" /><br />
-		住所　　　<input type="text" name="address" />
-	
-		<h2>(3)決済方法選択</h2>		
-		<input type="radio" name="payment" value="クレジットカード" checked="checked" />クレジットカード
-		<input type="radio" name="payment" value="銀行振込" />銀行振込
-		<input type="radio" name="payment" value="代金引換" />代金引換
+		<p>
+		        郵便番号　<input type="text" th:field="*{postalCode1}" th:errorclass="fieldError" style="width: 3em;" />
+			 - <input type="text" th:field="*{postalCode2}" th:errorclass="fieldError" style="width: 5em;"/>
+		</p>
+		<div th:if="${#fields.hasErrors('*')}">
+			<span class="ng" th:if="${#fields.hasErrors('postalCode1')}" th:errors="*{postalCode1}"></span>
+			<span class="ok" th:if="${!#fields.hasErrors('postalCode1')}" th:text="OK"></span>
+		</div>
+		<div th:if="${#fields.hasErrors('*')}">
+			<span class="ng" th:if="${#fields.hasErrors('postalCode2')}" th:errors="*{postalCode2}"></span>
+			<span class="ok" th:if="${!#fields.hasErrors('postalCode2')}" th:text="OK"></span>
+		</div>
+		<P>住所　　　　<input type="text" th:field="*{address}" th:errorclass="fieldError" style="width: 20em;"/></P>
+		<div th:if="${#fields.hasErrors('*')}">
+			<span class="ng" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+			<span class="ok" th:if="${!#fields.hasErrors('address')}" th:text="OK"></span>
+		</div>
+
+		<h2>(3)決済方法選択</h2>
+		<input type="radio" name="payment" value="クレジットカード" checked="checked" 
+			th:field="*{payment}" th:errorclass="fieldError" />クレジットカード
+		<input type="radio" name="payment" value="銀行振込" 
+			th:field="*{payment}" th:errorclass="fieldError" />銀行振込
+		<input type="radio" name="payment" value="代金引換" 
+			th:field="*{payment}" th:errorclass="fieldError" />代金引換
+		<div th:if="${#fields.hasErrors('*')}">
+			<span class="ng" th:if="${#fields.hasErrors('payment')}" th:errors="*{payment}"></span>
+			<span class="ok" th:if="${!#fields.hasErrors('payment')}" th:text="OK"></span>
+		</div>
 		
 		<h2>(4)配送方法選択</h2>
-		<input type="radio" name="delivery" value="クロネコヤマト" checked="checked" />クロネコヤマト
-		<input type="radio" name="delivery" value="佐川急便" />佐川急便
-		<input type="radio" name="delivery" value="ゆうパック" />ゆうパック
-		
+		<input type="radio" name="delivery" value="クロネコヤマト" checked="checked" 
+			th:field="*{delivery}" th:errorclass="fieldError" />クロネコヤマト
+		<input type="radio" name="delivery" value="佐川急便"
+			th:field="*{delivery}" th:errorclass="fieldError" />佐川急便
+		<input type="radio" name="delivery" value="ゆうパック" 
+			th:field="*{delivery}" th:errorclass="fieldError" />ゆうパック
+		<div th:if="${#fields.hasErrors('*')}">
+			<span class="ng" th:if="${#fields.hasErrors('delivery')}" th:errors="*{delivery}"></span>
+			<span class="ok" th:if="${!#fields.hasErrors('delivery')}" th:text="OK"></span>
+		</div>
 		<br />
 		<br />
 		<input type="submit" value="この内容で注文を確定する" />

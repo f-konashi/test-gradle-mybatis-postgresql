@@ -1,44 +1,89 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>ユーザー登録画面｜自作プロジェクト</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>ユーザー登録画面｜自作プロジェクト</title>
+<style type="text/css">
+<!--
+body {
+	font-family:'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif !important;
+}
+
+table, tr, th, td {
+	border: 1px solid #000;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #666;
+	color: #fff;
+}
+
+.ok {
+	color:green;
+}
+
+.ng {
+	color:#ff8080;	
+}
+
+.fieldError {
+	background-color: #ff8080;
+}
+.submit {
+	margin-top: 20px;
+}
+-->
+</style>
 </head>
 <body>
 	<h1>ユーザー登録画面(input.html)</h1>
-	<!-- 説明: 
-		・<form action="#">は、ボタンをページの先頭にジャンプするリンクの変わりに使う場合に使用する。
-		・th:object="${}"内には、モデルインスタンス名を指定する。
-		・ID項目に数値以外を入力するとエラーページに移動する(Geetingクラスで宣言されているidフィールドがlong型の為、回避方法現状不明)
-	-->
-	<form action="#" th:action="@{/regist}" method="post">
-	<table border="1" style="width: 50%; height: 50%">
-		<tr>
-			<td>名前</td>
-			<td><input type="text" name="name" /></td>
-		</tr>
-		<tr>
-			<td>性別</td>
-			<td>
-				男<input type="radio" name="gender" value="男" checked="checked" /> 
-				女<input type="radio" name="gender" value="女" /> 
-			</td>
-		</tr>
-		<tr>
-			<td>ログインID</td>
-			<td><input type="text" name="loginId" /></td>
-		</tr>
-		<tr>
-			<td>パスワード</td>
-			<td><input type="password" name="password" /></td>
-		</tr>
-		<tr>
-			<td colspan= "2" style="text-align: center;">
-				<input type="submit" value="会員登録する" />
-			</td>
-		</tr>
-	</table>
+	<form th:action="@{/regist}" th:object="${userInfoForm}" method="post">
+		<table class="input_table">
+			<tr>
+				<th>名前</th>
+				<td>
+					<input type="text" th:field="*{name}" th:errorclass="fieldError" /></td>
+				<td th:if="${#fields.hasErrors('*')}">
+					<span class="ng" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+					<span class="ok" th:if="${!#fields.hasErrors('name')}" th:text="OK"></span>
+				</td>
+			</tr>
+			<tr>
+				<th>性別</th>
+				<td>
+					男<input type="radio" value="男" checked="checked" th:field="*{gender}" th:errorclass="fieldError" />
+					女<input type="radio" value="女" th:field="*{gender}" th:errorclass="fieldError" />
+				</td>
+				<td th:if="${#fields.hasErrors('*')}">
+					<span class="ng" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+					<span class="ok" th:if="${!#fields.hasErrors('gender')}" th:text="OK"></span>
+				</td>
+			</tr>
+			<tr>
+				<th>ログインID</th>
+				<td>
+					<input type="text" th:field="*{loginId}" th:errorclass="fieldError" />
+				</td>
+				<td th:if="${#fields.hasErrors('*')}">
+					<span class="ng" th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}"></span>
+					<span class="ok" th:if="${!#fields.hasErrors('loginId')}" th:text="OK"></span>
+				</td>
+			</tr>
+			<tr>
+				<th>パスワード</th>
+				<td>
+					<input type="password" th:field="*{password}" th:errorclass="fieldError" />
+				</td>
+				<td th:if="${#fields.hasErrors('*')}">
+					<span class="ng" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+					<span class="ok" th:if="${!#fields.hasErrors('password')}" th:text="OK"></span></td>
+			</tr>
+		</table>
+		<input class="submit" type="submit" value="会員登録する" />
 	</form>
-	<p><a href="/">TOP画面へ</a></p>
+	<p>
+		<a href="/">TOP画面へ</a>
+	</p>
 </body>
 </html>

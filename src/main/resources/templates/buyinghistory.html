@@ -14,7 +14,7 @@
 			<td>購入合計金額(税込)</td>
 		</tr>
 		<tr th:each="buyingHistory : ${buyingHistoryList}">
-			<td width="25%"><span th:text="${buyingHistory.buyingDate}"></span></td>
+			<td width="25%"><span th:text="${#dates.format(buyingHistory.buyingDate, 'yyyy/MM/dd H:mm')}"></span></td>
 			<td width="25%"><span th:text="${buyingHistory.payment}"></span></td>
 			<td width="25%"><span th:text="${buyingHistory.delivery}"></span></td>
 			<td width="25%"><span th:text="${buyingHistory.totalPrice}"></span>円</td>
