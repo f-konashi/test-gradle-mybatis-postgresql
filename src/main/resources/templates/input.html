@@ -2,43 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
 <title>ユーザー登録画面｜自作プロジェクト</title>
-<style type="text/css">
-<!--
-body {
-	font-family:'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', sans-serif !important;
-}
-
-table, tr, th, td {
-	border: 1px solid #000;
-	border-collapse: collapse;
-}
-
-th {
-	background-color: #666;
-	color: #fff;
-}
-
-.ok {
-	color:green;
-}
-
-.ng {
-	color:#ff8080;	
-}
-
-.fieldError {
-	background-color: #ff8080;
-}
-.submit {
-	margin-top: 20px;
-}
--->
-</style>
 </head>
 <body>
 	<h1>ユーザー登録画面(input.html)</h1>
-	<form th:action="@{/regist}" th:object="${userInfoForm}" method="post">
+	<form th:action="@{/addUser}" th:object="${userInfoForm}" method="post">
 		<table class="input_table">
 			<tr>
 				<th>名前</th>

@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
       .authorizeRequests() // 認証対象外のパスを設定する.
-        .antMatchers("/", "/index", "/input", "/regist")  // 認証対象外のパスを設定する.
+        .antMatchers("/", "/index", "/input", "/addUser", "/regist")  // 認証対象外のパスを設定する.
         .permitAll()  // 上記パスへのアクセスを許可する.
         .anyRequest()  // その他のリクエストは認証がに必要.
         .authenticated()

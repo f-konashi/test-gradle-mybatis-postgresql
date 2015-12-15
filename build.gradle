@@ -151,4 +151,6 @@ gradle.taskGraph.whenReady { taskGraph ->
 // マイグレーション後はMyBatisのジェネレータを必ず実行。
 flywayMigrate.finalizedBy genMyBatis
 
+}
+
 

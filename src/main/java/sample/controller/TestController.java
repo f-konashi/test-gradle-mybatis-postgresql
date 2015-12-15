@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.Date;
@@ -57,11 +58,14 @@ public class TestController {
 	@Autowired
 	private BuyingHistoryService buyingHistoryService;
 
+	// *********************************************************************
+    // RequestMappingメソッド一覧
+    // *********************************************************************
 	/**
 	 * 会員登録画面で使用するフォームに対応したオブジェクトを初期化し、Modelに追加する
 	 * (Thymeleafからアクセスさせるために必要).
 	 * 
-	 * @return
+	 * @return　会員登録画面でのフォーム入力値を格納するオブジェクト
 	 */
 	@ModelAttribute
 	UserInfoForm setupUserInfoForm() {
@@ -72,7 +76,7 @@ public class TestController {
 	 * 画面で使うフォームに対応したオブジェクトを初期化し、Modelに追加する
 	 * (Thymeleafからアクセスさせるために必要).
 	 * 
-	 * @return
+	 * @return 決済画面でのフォーム入力値を格納するオブジェクト
 	 */
 	@ModelAttribute
 	OrderInfoForm setupOrderInfoForm() {
@@ -80,20 +84,14 @@ public class TestController {
 	}
 	
 	// *********************************************************************
-	// RequestMappingメソッド一覧
-	// *********************************************************************
-
-	@RequestMapping("/input")
-	public String displayInputPage(Model model) {
-		return "input";
-	}
-
+    // displayメソッド一覧
+    // *********************************************************************
+	
 	/**
-	 * トップページを表示します.
+	 * 商品一覧をデータベースから取得し、トップページをブラウザに表示します.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
+	 * @param model
+	 * @return ブラウザに表示するページ(index.html)
 	 */
 	@RequestMapping(value = { "/", "/index" })
 	public String displayIndexPage(Model model) {
@@ -101,16 +99,126 @@ public class TestController {
 		model.addAttribute("itemInfoList", getAllItemInfo());
 		return "index";
 	}
+	
+    /**
+     * 会員登録画面をブラウザに表示します.
+     * ※会員登録画面にて、フォーム入力値を格納すう為に使用している 「UserInfoFormオブジェクト」を使用可能にする為に必要なメソッド.
+     * ※「MvｃＣｏｎｆｉｎクラス」の「addViewControllersメソッド」を通すだけだと、
+     * {@literal @ModelAttribute}が反映しない為、「java.lang.IllegalStateException」がthrowされます.
+     * 
+     * @param model
+     * @return ブラウザに表示するページ(input.html)
+     */
+    @RequestMapping(value = "/input")
+    public String displayInput(Model model) {
+        return "input";
+    }
+	
+    /**
+     * 全会員情報をブラウザに表示します.
+     * 
+     * @param model
+     * @return ブラウザに表示するページ(serch.html)
+     */
+    @RequestMapping(value = "/serch")
+    public String displayAllUser(Model model) {
+        // 全会員情報を取得し、modelに格納する.
+        List<UserInfo> userInfoList = userInfoService.getUserAll();
+        model.addAttribute("userInfoList", userInfoList);
+        return "serch";
+    }
+    
+    /**
+     * 買い物かご画面をブラウザに表示します.
+     * 
+     * @param model
+     * @param principal
+     * @return ブラウザに表示するページ
+     */
+    @RequestMapping(value = "/shoppingcart")
+    public String displayShoppincart(Model model, Principal principal) {
+        // ログイン済の会員情報を取得する.
+        MyUserDetails loginUserData = getLoginUserData(principal);
 
+        // 買い物かごに入っている商品一覧を取得し、modelに格納する.
+        List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(loginUserData.getUserId());
+        model.addAttribute("itemInCartList", itemInCartList);
+        return "shoppingcart";
+    }
+    
+    /**
+     * 個別会員情報をデータベースから呼び出し、画面出力します.
+     * 
+     * @param model
+     * @param principal
+     * @return ブラウザに表示するページ
+     */
+    @RequestMapping(value = "/mypage")
+    public String displayUserInfo(Model model, Principal principal) {
+        // ログイン済の会員情報を取得する.
+        MyUserDetails loginUserData = getLoginUserData(principal);
+
+        // 個別会員情報をデータベースから取得し、modelに格納する.
+        UserInfo userInfo = userInfoService.getUserByLoginId(loginUserData.getLoginId());
+        model.addAttribute("userInfo", userInfo);
+        return "mypage";
+    }
+    
+    /**
+     * 購入履歴情報をデータベースから呼び出し、画面出力します.
+     * 
+     * @param model
+     * @param principal
+     * @return ブラウザに表示するページ
+     */
+    @RequestMapping("/buyinghistory")
+    public String displayBuyingHistory(Model model, Principal principal) {
+        // ログイン済の会員情報を取得する.
+        MyUserDetails loginUserData = getLoginUserData(principal);
+
+        // 個別購入履歴情報をデータベースから取得し、modelに格納する.
+        List<BuyingHistory> buyingHistoryList = buyingHistoryService.selectAllBuyingHistory(loginUserData.getUserId());
+        model.addAttribute("buyingHistoryList", buyingHistoryList);
+
+        return "buyinghistory";
+    }
+    
+    /**
+     * 会員登録完了画面をブラウザに表示します.
+     * 
+     * @param model
+     * @return ブラウザに表示するページ(regist.html)
+     */
+    @RequestMapping(value = "/regist")
+    public String displayRegist(Model model) {
+        return "regist";
+    }
+    
+    /**
+     * 会員登録完了画面をブラウザに表示します.
+     * 
+     * @param model
+     * @return ブラウザに表示するページ(ordercomplete.html)
+     */
+    @RequestMapping(value = "/ordercomplete")
+    public String displayOrdercomplete(Model model) {
+        return "ordercomplete";
+    }
+    
+    // *********************************************************************
+    // redirectメソッド一覧
+    // *********************************************************************
+    
 	/**
-	 * 会員情報を登録し、登録完了画面を出力します.
+	 * 会員情報を登録し、登録完了画面をブラウザに表示します.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
+	 * @param model
+	 * @return リダイレクト先
+	 * ※フォーム入力値のバリデーションエラーがあった場合は、元の入力画面を表示する.
 	 */
-	@RequestMapping(value = "/regist", method = RequestMethod.POST)
-	public String insertOne(Model model, @Valid UserInfoForm inputUserInfo, BindingResult result) {
+	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
+	public String insertOne(RedirectAttributes redirectAttributes,
+	        @Valid UserInfoForm inputUserInfo, BindingResult result) {
 
 		// フォーム入力値をチェックし、エラーがあれば会員登録ページにエラーを表示させる.
 		if (result.hasErrors()) {
@@ -118,7 +226,7 @@ public class TestController {
 				// log.debug("error code = [" + err.getCode() + "]");
 				System.out.println(err);
 			}
-			return "input";
+	        return "/input";
 		}
 
 		// 入力されたデータを、エンティティークラスに格納する.
@@ -134,92 +242,25 @@ public class TestController {
 		// ShaPasswordEncoder(256).encodePassword(password, null));
 		userInfo.setPassword(new StandardPasswordEncoder().encode(inputUserInfo.getPassword()));
 
-		// 入力されたデータを登録する.
+		// 入力されたデータをリダイレクト先でも利用可能にする。
 		userInfoService.registUser(userInfo);
-
-		model.addAttribute("userInfo", userInfo);
-		return "regist";
+		redirectAttributes.addFlashAttribute("userInfo", userInfo);
+        return "redirect:/regist";
 	}
 
 	/**
-	 * 全会員情報を画面に出力します.
+	 * 「買い物かごに入れる」ボタンがクリックされた商品を、その会員の買い物かごに登録し、買い物かご画面にリダイレクトします.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータを格納する
-	 * @return ブラウザに表示するhtmlページ
-	 */
-	@RequestMapping(value = "/serch")
-	public String displayUserAll(Model model) {
-		// 全会員情報を取得し、modelに格納する.
-		List<UserInfo> userInfoList = userInfoService.getUserAll();
-		model.addAttribute("userInfoList", userInfoList);
-		return "serch";
-	}
-
-	/**
-	 * 個別会員情報をデータベースから呼び出し、画面出力します.
+	 * ブラウザ側でページ更新された場合に、何度も商品が買い物かごに追加されてしまうのを回避する為に、
+	 * 別途作成した買い物かご表示メソッドにリダイレクトしています.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
-	 */
-	@RequestMapping(value = "/mypage")
-	public String displayUserInfo(Model model, Principal principal) {
-		// ログイン済の会員情報を取得する.
-		MyUserDetails loginUserData = getLoginUserData(principal);
-
-		// 個別会員情報をデータベースから取得し、modelに格納する.
-		UserInfo userInfo = userInfoService.getUserByLoginId(loginUserData.getLoginId());
-		model.addAttribute("userInfo", userInfo);
-		return "mypage";
-	}
-
-	/**
-	 * 購入履歴情報をデータベースから呼び出し、画面出力します.
-	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
-	 */
-	@RequestMapping("/buyinghistory")
-	public String displayBuyingHistory(Model model, Principal principal) {
-		// ログイン済の会員情報を取得する.
-		MyUserDetails loginUserData = getLoginUserData(principal);
-
-		// 個別購入履歴情報をデータベースから取得し、modelに格納する.
-		List<BuyingHistory> buyingHistoryList = buyingHistoryService.selectAllBuyingHistory(loginUserData.getUserId());
-		model.addAttribute("buyingHistoryList", buyingHistoryList);
-
-		return "buyinghistory";
-	}
-
-	/**
-	 * 買い物かご画面を出力します.
-	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
-	 */
-	@RequestMapping(value = "/shoppingcart")
-	public String DisplayCart(Model model, Principal principal) {
-		// ログイン済の会員情報を取得する.
-		MyUserDetails loginUserData = getLoginUserData(principal);
-
-		// 買い物かごに入っている商品一覧を取得し、modelに格納する.
-		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(loginUserData.getUserId());
-		model.addAttribute("itemInCartList", itemInCartList);
-		return "shoppingcart";
-	}
-
-	/**
-	 * 「買い物かごに入れる」ボタンがクリックされた商品を、その会員の買い物かごに登録し、買い物かご画面を出力します.
-	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータを格納する
-	 * @return ブラウザに表示するhtmlページ
+     * @param model
+     * @param principal
+	 * @return リダイレクト先
 	 */
 	@RequestMapping(value = "/addItemInCart")
-	public String addItemAndDisplayCart(Model model, Principal principal, @RequestParam("itemId") Integer itemId,
+	public String addItemInCart(Model model, Principal principal, 
+	        @RequestParam("itemId") Integer itemId,
 			@RequestParam("itemCount") Integer itemCount) {
 		// ログイン済の会員情報を取得する.
 		MyUserDetails loginUserData = getLoginUserData(principal);
@@ -231,40 +272,30 @@ public class TestController {
 		itemInCart.setItemCount(itemCount);
 		itemInCartService.setItemInCart(itemInCart);
 
-		// 買い物かごに入っている商品一覧を取得し、modelに格納する.
-		List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(loginUserData.getUserId());
-		model.addAttribute("itemInCartList", itemInCartList);
-		model.addAttribute("itemId", itemId);
-		return "shoppingcart";
+		return "redirect:/shoppingcart";
 	}
 
 	/**
-	 * 買い物かご内から、 「削除」ボタンがクリックされた商品のみ削除する.
+	 * 買い物かご内から、 「削除」ボタンがクリックされた商品のみ削除し、、買い物かご画面にリダイレクトします.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
+     * @param model
+     * @param principal
+     * @param cartId
+	 * @return ブラウザに表示するページ
 	 */
 	@RequestMapping(value = "/deleteItemInCart")
 	public String deleteItemInCart(Model model, Principal principal, @RequestParam("cartId") Integer cartId) {
 		// 選択された商品を削除する.
 		itemInCartService.deleteItemInCart(cartId);
 
-		// ログインユーザーの会員情報を取得する.
-		MyUserDetails loginUserData = getLoginUserData(principal);
-
-		// 買い物かごに入っている商品一覧を取得し、modelに格納する.
-		List<ItemInfoEx> ItemInfoInCartList = getAllItemInfoInCart(loginUserData.getUserId());
-		model.addAttribute("itemInCartList", ItemInfoInCartList);
-
-		return "shoppingcart";
+        return "redirect:/shoppingcart";
 	}
 
 	/**
-	 * 買い物かご内から、 全商品を削除します.
+	 * 買い物かご内から、 全商品を削除し、買い物かご画面にリダイレクトします.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
+     * @param model
+     * @param principal
 	 * @return ブラウザに表示するhtmlページ
 	 */
 	@RequestMapping(value = "/deleteItemAllInCart")
@@ -275,19 +306,14 @@ public class TestController {
 		// 買い物かご内の全商品を削除する.
 		itemInCartService.deleteItemAllInCart(loginUserData.getUserId());
 
-		// 買い物かごに入っている商品一覧を取得し、modelに格納する.
-		List<ItemInfoEx> ItemInfoInCartList = getAllItemInfoInCart(loginUserData.getUserId());
-		model.addAttribute("itemInCartList", ItemInfoInCartList);
-
-		return "shoppingcart";
+        return "redirect:/shoppingcart";
 	}
 
 	/**
 	 * 決済画面を表示します.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
+	 * @param model
+	 * @return ブラウザに表示するページ
 	 */
 	@RequestMapping(value = "/orderform")
 	public String displayOrderformPage(Model model, Principal principal) {
@@ -297,7 +323,7 @@ public class TestController {
 		// 買い物かごに入っている商品一覧を取得し、小計と合計を算出する.
 		List<ItemInfoEx> itemInfoInCartList = getAllItemInfoInCart(loginUserData.getUserId());
 
-		// ここから※算出処理は、後でビジネスクラスに移行予定
+		// TODO: ここから※算出処理は、後でビジネスクラスに移行予定
 		int total = 0;
 		int postage = 0;
 		final double TAX_RATE = 1.08;
@@ -316,9 +342,8 @@ public class TestController {
 		}
 		// 最終合計(商品合計(税込) + 送料)を算出する.
 		total += postage;
-		// ここまで※算出処理は、後でビジネスクラスに移行予定
+		// TODO: ここまで※算出処理は、後でビジネスクラスに移行予定
 
-		// modelに格納する.
 		model.addAttribute("itemInfoInCartList", itemInfoInCartList);
 		model.addAttribute("postage", postage);
 		model.addAttribute("total", total);
@@ -329,15 +354,15 @@ public class TestController {
 	/**
 	 * 決済完了画面を表示します.
 	 * 
-	 * @param Model
-	 *            htmlページに渡したいデータの格納先
-	 * @return ブラウザに表示するhtmlページ
+	 * @param model
+	 * @return ブラウザに表示するページ
 	 */
 	@RequestMapping(value = "/orderComplete")
 	public String displayOrderCompletePage(Model model, Principal principal, SessionStatus sessionStatus,
-			@ModelAttribute("postage") Integer postage, @ModelAttribute("total") Integer total,
-			@Valid OrderInfoForm orderInfoForm, BindingResult result)
-					throws HttpSessionRequiredException {
+			@ModelAttribute("postage") Integer postage, 
+			@ModelAttribute("total") Integer total,
+			@Valid OrderInfoForm orderInfoForm, 
+			BindingResult result) throws HttpSessionRequiredException {
 		
 		// フォーム入力値をチェックし、エラーがあれば会員登録ページにエラーを表示させる.
 		if (result.hasErrors()) {
@@ -370,7 +395,7 @@ public class TestController {
 		// modelに格納する.
 		model.addAttribute("buyingHistory", buyingHistory);
 
-		return "ordercomplete";
+		return "redirect:/ordercomplete";
 	}
 
 	// *********************************************************************

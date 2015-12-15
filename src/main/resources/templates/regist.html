@@ -6,6 +6,12 @@
 </head>
 <body>
 	<h1>会員登録完了画面(regist.html)</h1>
+	<!--/* start▼画面がリロードされた場合のみ表示▼ */-->
+	<div th:if="${userInfo == null}">
+		<p>会員登録は既に完了しております。</p>
+	</div>
+	<!--/* end  ▲画面がリロードされた場合のみ表示▲ */-->
+	<div th:if="${userInfo != null}">
 	<p>以下の内容で会員登録完了しました。</p>
 		<table border="1" style="width: 50%; height: 50%">
 		<tr>
@@ -25,6 +31,7 @@
 			<td>セキュリティ保護のため、表示していません。</td>
 		</tr>
 	</table>
+	</div>
 	<p><a href="/">トップ画面へ</a></p>
 </body>
 </html>

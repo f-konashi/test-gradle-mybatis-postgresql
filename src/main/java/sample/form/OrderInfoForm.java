@@ -1,13 +1,17 @@
 package sample.form;
 
+import javax.validation.constraints.Pattern;
+
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class OrderInfoForm {
+	@Pattern(regexp="\\d{3}", message="3桁の数字を入力して下さい。")
 	@NotEmpty(message = Message.ERROR_EMPTY)
-    private Integer postalCode1;
-    
+    private String postalCode1;
+ 
+	@Pattern(regexp="\\d{4}", message="4桁の数字を入力して下さい。")
 	@NotEmpty(message = Message.ERROR_EMPTY)
-    private Integer postalCode2;
+    private String postalCode2;
 	
 	@NotEmpty(message = Message.ERROR_EMPTY)
     private String address;
@@ -20,19 +24,19 @@ public class OrderInfoForm {
 
 	// 以下、全てアクセッサーメソッド
 	
-    public Integer getPostalCode1() {
+    public String getPostalCode1() {
         return postalCode1;
     }
 
-    public void setPostalCode1(Integer postalCode1) {
+    public void setPostalCode1(String postalCode1) {
         this.postalCode1 = postalCode1;
     }
 
-    public Integer getPostalCode2() {
+    public String getPostalCode2() {
         return postalCode2;
     }
 
-    public void setPostalCode2(Integer postalCode2) {
+    public void setPostalCode2(String postalCode2) {
         this.postalCode2 = postalCode2;
     }
     

@@ -6,6 +6,7 @@
 </head>
 <body>
 	<h1>トップ画面(index.html)</h1>
+	<!--/* TODO:ブラウザから直接アクセスしても表示されてしまうので、どうにかしなければ */-->
 	<!--/* start▼ログイン認証済かどうか確認する▼ */-->
 	<p th:if="${#authorization.expression('isAuthenticated()')}">あなたはログイン済です</p>
 	<p th:if="${#authorization.expression('isAuthenticated()') == false}">あなたはログインしてません</p>

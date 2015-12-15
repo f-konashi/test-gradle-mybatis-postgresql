@@ -1,0 +1,32 @@
+@CHARSET "UTF-8";
+
+body {
+	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
+		'ＭＳ Ｐゴシック', sans-serif !important;
+}
+
+table, tr, th, td {
+	border: 1px solid #000;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #666;
+	color: #fff;
+}
+
+.ok {
+	color: green;
+}
+
+.ng {
+	color: #ff8080;
+}
+
+.fieldError {
+	background-color: #ff8080;
+}
+
+.submit {
+	margin-top: 20px;
+}
