@@ -59,7 +59,7 @@ public class TestController {
 	private BuyingHistoryService buyingHistoryService;
 
 	// *********************************************************************
-    // RequestMappingメソッド一覧
+    // ModelAttributeメソッド一覧
     // *********************************************************************
 	/**
 	 * 会員登録画面で使用するフォームに対応したオブジェクトを初期化し、Modelに追加する
@@ -162,25 +162,6 @@ public class TestController {
         UserInfo userInfo = userInfoService.getUserByLoginId(loginUserData.getLoginId());
         model.addAttribute("userInfo", userInfo);
         return "mypage";
-    }
-    
-    /**
-     * 購入履歴情報をデータベースから呼び出し、画面出力します.
-     * 
-     * @param model
-     * @param principal
-     * @return ブラウザに表示するページ
-     */
-    @RequestMapping("/buyinghistory")
-    public String displayBuyingHistory(Model model, Principal principal) {
-        // ログイン済の会員情報を取得する.
-        MyUserDetails loginUserData = getLoginUserData(principal);
-
-        // 個別購入履歴情報をデータベースから取得し、modelに格納する.
-        List<BuyingHistory> buyingHistoryList = buyingHistoryService.selectAllBuyingHistory(loginUserData.getUserId());
-        model.addAttribute("buyingHistoryList", buyingHistoryList);
-
-        return "buyinghistory";
     }
     
     /**

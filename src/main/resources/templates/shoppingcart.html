@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>買い物かご｜自作プロジェクト</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>買い物かご｜自作プロジェクト</title>
 </head>
 <body>
 	<h1>買い物かご画面(shoppingcart.html)</h1>
@@ -19,12 +19,12 @@
 	<div th:if="${itemInCartList.size() != 0}">
 		<table border="1" style="width: 50%; height: 50%">
 			<tr>
-				<td>商品管理番号</td>
-				<td>商品名</td>
-				<td>単価(税込)</td>
-				<td>送料</td>
-				<td>注文個数</td>
-				<td>削除</td>
+				<th>商品管理番号</th>
+				<th>商品名</th>
+				<th>単価(税込)</th>
+				<th>送料</th>
+				<th>注文個数</th>
+				<th>削除</th>
 			</tr>
 			<tr th:each="list : ${itemInCartList}">
 				<td width="15%"><span th:text="${list.itemId}"></span></td>

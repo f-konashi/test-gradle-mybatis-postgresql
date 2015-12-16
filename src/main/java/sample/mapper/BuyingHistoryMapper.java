@@ -63,12 +63,20 @@ public interface BuyingHistoryMapper {
     int updateByPrimaryKey(BuyingHistory record);
     
     /**
+     * 【1レコード挿入】
      * レコードを追加する.
      */
     int insertOne(BuyingHistory record);
     
     /**
+     * 【全件取得】
      * 会員ごとの購入履歴を取得する.
      */
     List<BuyingHistory> selectAllBuyingHistory(Integer userId);
+    
+    /**
+     * 【選択取得】
+     * 会員ごとの特定の条件でソート後の購入履歴を取得する.
+     */
+    List<BuyingHistory> selectSortedBuyingHistory(BuyingHistoryExample example);
 }

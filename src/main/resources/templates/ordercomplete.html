@@ -10,10 +10,10 @@
 	<p>以下の内容で、注文が確定しました。</p>
 	<table border="1" style="width: 50%; height: 50%">
 		<tr>
-			<td>購入日時</td>
-			<td>決済方法</td>
-			<td>配送方法</td>
-			<td>購入合計金額(税込)</td>
+			<th>購入日時</th>
+			<th>決済方法</th>
+			<th>配送方法</th>
+			<th>購入合計金額(税込)</th>
 		</tr>
 		<tr>
 			<td width="25%"><span th:text="${#dates.format(buyingHistory.buyingDate, 'yyyy/MM/dd H:mm')}"></span></td>

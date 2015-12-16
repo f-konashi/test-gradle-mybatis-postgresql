@@ -219,12 +219,22 @@
 		#{postage,jdbcType=INTEGER},
 		#{totalPrice,jdbcType=INTEGER})
 	</insert>
-	<select id="selectAllBuyingHistory" 
-	    parameterType="sample.model.BuyingHistory" 
+	<select id="selectAllBuyingHistory" parameterType="sample.model.BuyingHistory" 
 	        resultMap="BaseResultMap">
 		SELECT buying_date, payment, delivery, total_price
 		FROM   buying_history
 		WHERE  user_id = #{itemId,jdbcType=INTEGER};
+	</select>
+	<select id="selectSortedBuyingHistory" parameterType="sample.model.BuyingHistoryExample"
+		resultMap="BaseResultMap">
+		SELECT buying_date, payment, delivery, total_price
+		FROM public.buying_history
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
 	</select>
 	<!-- end ▲追加▲ -->
 </mapper>

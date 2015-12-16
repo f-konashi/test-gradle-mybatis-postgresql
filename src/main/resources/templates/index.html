@@ -2,6 +2,25 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+<!--
+body {
+	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
+		'ＭＳ Ｐゴシック', sans-serif !important;
+	font-size: 90%;
+}
+
+table, tr, th, td {
+	border: 1px solid #000;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #666;
+	color: #fff;
+}
+-->
+</style>
 <title>トップ画面｜自作プロジェクト</title>
 </head>
 <body>
@@ -51,12 +70,12 @@
 	<div>
 		<table border="1" style="width: 50%; height: 50%">
 			<tr>
-				<td>商品管理番号</td>
-				<td>商品名</td>
-				<td>価格</td>
-				<td>送料</td>
-				<td>在庫数</td>
-				<td></td>
+				<th>商品管理番号</th>
+				<th>商品名</th>
+				<th>価格</th>
+				<th>送料</th>
+				<th>在庫数</th>
+				<th></th>
 			</tr>
 			<tr th:each="list : ${itemInfoList}">
 				<td width="15%"><span th:text="${list.itemId}"></span></td>

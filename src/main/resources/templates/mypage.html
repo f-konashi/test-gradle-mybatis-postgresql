@@ -2,24 +2,49 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+<!--
+body {
+	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
+		'ＭＳ Ｐゴシック', sans-serif !important;
+	font-size: 90%;
+}
+
+table, tr, th, td {
+	border: 1px solid #000;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #666;
+	color: #fff;
+}
+-->
+</style>
 <title>会員情報確認画面｜自作プロジェクト</title>
 </head>
 <body>
 	<h1>会員情報確認画面(mypage.html)</h1>
-	<table border="1" style="width: 50%; height: 50%">
+	<table th:object="${userInfo}">
 		<tr>
-			<td>会員番号</td>
-			<td>名前</td>
-			<td>性別</td>
-			<td>ログインID</td>
-			<td>パスワード</td>
+			<th>会員番号</th>
+			<td><span th:text="*{userId}"></span></td>
 		</tr>
-		<tr th:object="${userInfo}">
-			<td width="15%"><span th:text="*{userId}"></span></td>
-			<td width="25%"><span th:text="*{name}"></span></td>
-			<td width="25%"><span th:text="*{gender}"></span></td>
-			<td width="25%"><span th:text="*{loginId}"></span></td>
-			<td width="25%"><span th:text="*{password}"></span></td>
+		<tr>
+			<th>名前</th>
+			<td><span th:text="*{name}"></span></td>
+		</tr>
+		<tr>
+			<th>性別</th>
+			<td><span th:text="*{gender}"></span></td>
+		</tr>
+		<tr>
+			<th>ログインID</th>
+			<td><span th:text="*{loginId}"></span></td>
+		</tr>
+		<tr>
+			<th>パスワード</th>
+			<td><span th:text="*{password}"></span></td>
 		</tr>
 	</table>
 	<p>

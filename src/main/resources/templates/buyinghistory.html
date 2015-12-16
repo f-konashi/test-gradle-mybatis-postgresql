@@ -3,21 +3,85 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>購入履歴画面｜自作プロジェクト</title>
+<style type="text/css">
+<!--
+body {
+	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
+		'ＭＳ Ｐゴシック', sans-serif !important;
+	font-size: 90%;
+}
+
+table, tr, th, td {
+	border: 1px solid #000;
+	border-collapse: collapse;
+}
+
+th, td {
+	text-align: center;
+}
+
+th {
+	background-color: #666;
+	color: #fff;
+}
+-->
+</style>
 </head>
 <body>
-	<h1>トップ画面(buyinghistory.html)</h1>
+	<h1>購入履歴画面(buyinghistory.html)</h1>
+	<h2>並び順を変更する</h2>
+	<p>購入日時:
+		<a th:href="@{/sort/date/desc}">新しい順</a>
+		<a th:href="@{/sort/date/asc}">古い順</a>
+	</p>
+	<h2>条件から購入履歴を探す</h2>
+	<form th:action="@{/sort}" th:object="${sortForm}" method="post">
+		<p>購入日時:
+		<select th:field="*{buying_date}">
+			<option value="0" selected="selected">全ての期間</option>
+			<option value="1">過去30日以内</option>
+			<option value="2">過去60日以内</option>
+			<option value="3">過去120日以内</option>
+		</select>
+		<select th:field="*{isAsc}">
+			<option value="0" selected="selected">新しい順</option>
+			<option value="-1">古い順</option>
+		</select>
+		</p>
+		<p>決済方法:
+		<select th:field="*{payment}">
+			<option value="0" selected="selected">全て</option>
+			<option value="1">クレジットカード</option>
+			<option value="2">銀行振込</option>
+			<option value="3">代金引換</option>
+		</select>
+		</p>
+		<p>配送方法:
+		<select th:field="*{delivery}">
+			<option value="0" selected="selected">全て</option>
+			<option value="1">クロネコヤマト</option>
+			<option value="2">ゆうパック</option>
+			<option value="3">佐川急便</option>
+		</select>
+		</p>
+		<p>商品名&nbsp;&nbsp;&nbsp;:
+		<input type="text" th:field="*{item_name}" />
+		</p>
+		<input class="submit" type="submit" value="この条件で検索する" />
+	</form>
+	<h2>購入履歴一覧</h2>
 	<table border="1" style="width: 50%; height: 50%">
 		<tr>
-			<td>購入日時</td>
-			<td>決済方法</td>
-			<td>配送方法</td>
-			<td>購入合計金額(税込)</td>
+			<th>購入日時</th>
+			<th>決済方法</th>
+			<th>配送方法</th>
+			<th>購入合計金額(税込)</th>
 		</tr>
 		<tr th:each="buyingHistory : ${buyingHistoryList}">
-			<td width="25%"><span th:text="${#dates.format(buyingHistory.buyingDate, 'yyyy/MM/dd H:mm')}"></span></td>
-			<td width="25%"><span th:text="${buyingHistory.payment}"></span></td>
-			<td width="25%"><span th:text="${buyingHistory.delivery}"></span></td>
-			<td width="25%"><span th:text="${buyingHistory.totalPrice}"></span>円</td>
+			<td><span th:text="${#dates.format(buyingHistory.buyingDate, 'yyyy/MM/dd H:mm')}"></span></td>
+			<td><span th:text="${buyingHistory.payment}"></span></td>
+			<td><span th:text="${buyingHistory.delivery}"></span></td>
+			<td><span th:text="${buyingHistory.totalPrice}"></span>円</td>
 		</tr>
 	</table>
 	<p>
