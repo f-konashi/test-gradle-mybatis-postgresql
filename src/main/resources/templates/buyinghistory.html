@@ -1,31 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>購入履歴画面｜自作プロジェクト</title>
-<style type="text/css">
-<!--
-body {
-	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
-		'ＭＳ Ｐゴシック', sans-serif !important;
-	font-size: 90%;
-}
-
-table, tr, th, td {
-	border: 1px solid #000;
-	border-collapse: collapse;
-}
-
-th, td {
-	text-align: center;
-}
-
-th {
-	background-color: #666;
-	color: #fff;
-}
--->
-</style>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='購入履歴')">
 </head>
 <body>
 	<h1>購入履歴画面(buyinghistory.html)</h1>
@@ -35,17 +13,19 @@ th {
 		<a th:href="@{/sort/date/asc}">古い順</a>
 	</p>
 	<h2>条件から購入履歴を探す</h2>
-	<form th:action="@{/sort}" th:object="${sortForm}" method="post">
+	<form th:action="@{/buyinghistory/serch}" th:object="${buyingHistorySortForm}" method="post">
 		<p>購入日時:
-		<select th:field="*{buying_date}">
+		<select th:field="*{buyingDate}">
 			<option value="0" selected="selected">全ての期間</option>
-			<option value="1">過去30日以内</option>
-			<option value="2">過去60日以内</option>
-			<option value="3">過去120日以内</option>
+			<option value="1">過去1日以内</option>
+			<option value="7">過去7日以内</option>
+			<option value="30">過去30日以内</option>
+			<option value="60">過去60日以内</option>
+			<option value="120">過去120日以内</option>
 		</select>
-		<select th:field="*{isAsc}">
-			<option value="0" selected="selected">新しい順</option>
-			<option value="-1">古い順</option>
+		<select th:field="*{ascOrDesc}">
+			<option value="asc" selected="selected">新しい順</option>
+			<option value="desc">古い順</option>
 		</select>
 		</p>
 		<p>決済方法:
@@ -70,7 +50,7 @@ th {
 		<input class="submit" type="submit" value="この条件で検索する" />
 	</form>
 	<h2>購入履歴一覧</h2>
-	<table border="1" style="width: 50%; height: 50%">
+	<table>
 		<tr>
 			<th>購入日時</th>
 			<th>決済方法</th>
@@ -84,8 +64,6 @@ th {
 			<td><span th:text="${buyingHistory.totalPrice}"></span>円</td>
 		</tr>
 	</table>
-	<p>
-		<a href="/">トップ画面へ</a>
-	</p>
+	<footer th:include="fragments/common::footer"></footer>
 </body>
 </html>

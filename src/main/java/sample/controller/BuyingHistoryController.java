@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.security.Principal;
 import java.util.List;
 
-import sample.form.SortForm;
+import sample.form.BuyingHistorySortForm;
 import sample.model.BuyingHistory;
 import sample.security.MyUserDetails;
 import sample.service.BuyingHistoryService;
@@ -22,10 +22,23 @@ import sample.service.BuyingHistoryService;
  * @author f-konashi
  *
  */
+
 @Controller
+@RequestMapping("/buyinghistory")
 public class BuyingHistoryController {
     @Autowired
     private BuyingHistoryService buyingHistoryService;
+    
+    /**
+     * 画面で使うフォームに対応したオブジェクトを初期化し、Modelに追加する
+     * (Thymeleafからアクセスさせるために必要).
+     * 
+     * @return 決済画面でのフォーム入力値を格納するオブジェクト
+     */
+    @ModelAttribute
+    BuyingHistorySortForm setupOrderBuyingHistorySortForm() {
+        return new BuyingHistorySortForm();
+    }
 
     /**
      * 購入履歴画面で使用するフォームに対応したオブジェクトを初期化し、Modelに追加する
@@ -34,8 +47,8 @@ public class BuyingHistoryController {
      * @return　購入履歴画面でのフォーム入力値を格納するオブジェクト
      */
     @ModelAttribute
-    SortForm setupUserSortForm() {
-        return new SortForm();
+    BuyingHistorySortForm setupUserBuyingHistorySortForm() {
+        return new BuyingHistorySortForm();
     }
     
     /**
@@ -45,7 +58,7 @@ public class BuyingHistoryController {
      * @param principal
      * @return ブラウザに表示するページ
      */
-    @RequestMapping("/buyinghistory")
+    @RequestMapping("")
     public String displayBuyingHistory(Model model, Principal principal) {
         // ログイン済の会員情報を取得する.
         MyUserDetails loginUserData = getLoginUserData(principal);
@@ -77,6 +90,27 @@ public class BuyingHistoryController {
 
         return "buyinghistory";
     }
+    
+    /**
+     *
+     */
+    @RequestMapping("/serch")
+    public String serch(Model model, Principal principal,
+            BuyingHistorySortForm buyingHistorySortForm) {
+        // ログインユーザーの会員情報を取得する.
+        MyUserDetails loginUserData = getLoginUserData(principal);
+        
+        // ソート結果を取得し、viewに渡す.
+        List<BuyingHistory> buyingHistoryList = 
+                buyingHistoryService.selectedBuyingHistory(loginUserData.getUserId(), buyingHistorySortForm);
+        model.addAttribute(buyingHistoryList);
+
+        return "buyinghistory";
+    }
+    
+    // *********************************************************************
+    // privateメソッド一覧
+    // *********************************************************************
 
     /**
      * ログインユーザーの会員情報を取得します.

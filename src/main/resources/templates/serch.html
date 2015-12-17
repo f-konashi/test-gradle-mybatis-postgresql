@@ -1,25 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>全会員情報確認｜自作プロジェクト</title>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='全会員情報')">
 </head>
 <body>
 	<h1>全会員検索結果画面(serch.html)</h1>
-	<table border="1" style="width: 50%; height: 50%">
+	<table>
 		<tr>
-			<td>会員ナンバー</td>
-			<td>名前</td>
-			<td>性別</td>
-			<td>ログインID</td>
-			<td>パスワード</td>
+			<th>会員ナンバー</th>
+			<th>名前</th>
+			<th>性別</th>
+			<th>ログインID</th>
+			<th>パスワード</th>
 		</tr>
 		<tr th:each="list : ${userInfoList}">
-			<td width="15%"><span th:text="${list.userId}"></span></td>
-			<td width="25%"><span th:text="${list.name}"></span></td>
-			<td width="25%"><span th:text="${list.gender}"></span></td>
-			<td width="25%"><span th:text="${list.loginId}"></span></td>
-			<td width="25%"><span th:text="${list.password}"></span></td>
+			<td><span th:text="${list.userId}"></span></td>
+			<td><span th:text="${list.name}"></span></td>
+			<td><span th:text="${list.gender}"></span></td>
+			<td><span th:text="${list.loginId}"></span></td>
+			<td><span th:text="${list.password}"></span></td>
 		</tr>
 	</table>
 	<p><a href="/">トップ画面へ</a></p>

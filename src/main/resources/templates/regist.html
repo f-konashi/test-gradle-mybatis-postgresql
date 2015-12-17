@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>会員登録完了画面｜自作プロジェクト</title>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='会員登録完了')">
 </head>
 <body>
 	<h1>会員登録完了画面(regist.html)</h1>
@@ -15,23 +16,23 @@
 	<p>以下の内容で会員登録完了しました。</p>
 		<table border="1" style="width: 50%; height: 50%">
 		<tr>
-			<td>名前</td>
+			<th>名前</th>
 			<td th:text="${userInfo.name}"></td>
 		</tr>
 		<tr>
-			<td>性別</td>
+			<th>性別</th>
 			<td th:text="${userInfo.gender}"></td>
 		</tr>
 		<tr>
-			<td>ログインID</td>
+			<th>ログインID</th>
 			<td th:text="${userInfo.loginId}"></td>
 		</tr>
 		<tr>
-			<td>パスワード</td>
+			<th>パスワード</th>
 			<td>セキュリティ保護のため、表示していません。</td>
 		</tr>
 	</table>
 	</div>
-	<p><a href="/">トップ画面へ</a></p>
+	<footer th:include="fragments/common::footer"></footer>
 </body>
 </html>

@@ -3,6 +3,8 @@ package sample.form;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import sample.util.Message;
+
 /**
  * 会員登録画面での入力値を格納するクラスです. 
  * このクラスを使用して、バリデーションも行います.

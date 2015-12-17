@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
+
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
-
-import javax.validation.Valid;
 
 import sample.form.UserInfoForm;
 import sample.form.OrderInfoForm;
@@ -32,6 +32,7 @@ import sample.model.ItemInfoEx;
 import sample.model.UserInfo;
 import sample.security.MyUserDetails;
 import sample.service.BuyingHistoryService;
+import sample.service.CommonService;
 import sample.service.ItemInCartService;
 import sample.service.ItemInfoService;
 import sample.service.UserInfoService;
@@ -46,6 +47,9 @@ import sample.service.UserInfoService;
 @EnableAutoConfiguration
 @SessionAttributes(value = { "itemInfoInCartList", "postage", "total" })
 public class TestController {
+    @Autowired
+    private CommonService commonService;
+    
 	@Autowired
 	private UserInfoService userInfoService;
 
@@ -71,17 +75,6 @@ public class TestController {
 	UserInfoForm setupUserInfoForm() {
 		return new UserInfoForm();
 	}
-
-	/**
-	 * 画面で使うフォームに対応したオブジェクトを初期化し、Modelに追加する
-	 * (Thymeleafからアクセスさせるために必要).
-	 * 
-	 * @return 決済画面でのフォーム入力値を格納するオブジェクト
-	 */
-	@ModelAttribute
-	OrderInfoForm setupOrderInfoForm() {
-		return new OrderInfoForm();
-	}
 	
 	// *********************************************************************
     // displayメソッド一覧
@@ -103,7 +96,7 @@ public class TestController {
     /**
      * 会員登録画面をブラウザに表示します.
      * ※会員登録画面にて、フォーム入力値を格納すう為に使用している 「UserInfoFormオブジェクト」を使用可能にする為に必要なメソッド.
-     * ※「MvｃＣｏｎｆｉｎクラス」の「addViewControllersメソッド」を通すだけだと、
+     * ※「MvcConfigクラス」の「addViewControllersメソッド」を通すだけだと、
      * {@literal @ModelAttribute}が反映しない為、「java.lang.IllegalStateException」がthrowされます.
      * 
      * @param model
@@ -122,7 +115,7 @@ public class TestController {
      */
     @RequestMapping(value = "/serch")
     public String displayAllUser(Model model) {
-        // 全会員情報を取得し、modelに格納する.
+        // 全会員情報を取得し、viewに渡す.
         List<UserInfo> userInfoList = userInfoService.getUserAll();
         model.addAttribute("userInfoList", userInfoList);
         return "serch";
@@ -140,7 +133,7 @@ public class TestController {
         // ログイン済の会員情報を取得する.
         MyUserDetails loginUserData = getLoginUserData(principal);
 
-        // 買い物かごに入っている商品一覧を取得し、modelに格納する.
+        // 買い物かごに入っている商品一覧を取得し、viewに渡す.
         List<ItemInfoEx> itemInCartList = itemInCartService.getItemInCart(loginUserData.getUserId());
         model.addAttribute("itemInCartList", itemInCartList);
         return "shoppingcart";
@@ -300,35 +293,15 @@ public class TestController {
 	public String displayOrderformPage(Model model, Principal principal) {
 		// ログインユーザーの会員情報を取得する.
 		MyUserDetails loginUserData = getLoginUserData(principal);
-
-		// 買い物かごに入っている商品一覧を取得し、小計と合計を算出する.
+		// 買い物かごに入っている商品一覧を取得する.
 		List<ItemInfoEx> itemInfoInCartList = getAllItemInfoInCart(loginUserData.getUserId());
-
-		// TODO: ここから※算出処理は、後でビジネスクラスに移行予定
-		int total = 0;
-		int postage = 0;
-		final double TAX_RATE = 1.08;
-		for (ItemInfoEx item : itemInfoInCartList) {
-			// 商品小計(税込)を算出する.
-			int subtotal = (int) (item.getPrice() * item.getItemCount() * TAX_RATE);
-			item.setSubtotal(subtotal);
-
-			// 商品合計(税込)を算出する.
-			total += subtotal;
-
-			// 送料を算出する(商品内で送料の最大値を適用する).
-			if (item.getPostage() > postage) {
-				postage = item.getPostage();
-			}
-		}
-		// 最終合計(商品合計(税込) + 送料)を算出する.
-		total += postage;
-		// TODO: ここまで※算出処理は、後でビジネスクラスに移行予定
-
+		// 送料を算出し、viewに渡す.
+        int postage = commonService.calcPostage(itemInfoInCartList);
+        model.addAttribute("postage", postage);
+        // 商品小計と合計金額を算出し、viewに渡す.
+        int totalPrice = commonService.calcTotalPrice(itemInfoInCartList);
+        model.addAttribute("total", totalPrice + postage);
 		model.addAttribute("itemInfoInCartList", itemInfoInCartList);
-		model.addAttribute("postage", postage);
-		model.addAttribute("total", total);
-
 		return "orderform";
 	}
 
@@ -339,7 +312,7 @@ public class TestController {
 	 * @return ブラウザに表示するページ
 	 */
 	@RequestMapping(value = "/orderComplete")
-	public String displayOrderCompletePage(Model model, Principal principal, SessionStatus sessionStatus,
+	public String displayOrderCompletePage(RedirectAttributes redirectAttributes, Principal principal, SessionStatus sessionStatus,
 			@ModelAttribute("postage") Integer postage, 
 			@ModelAttribute("total") Integer total,
 			@Valid OrderInfoForm orderInfoForm, 
@@ -373,8 +346,8 @@ public class TestController {
 		// セッションを破棄する.
 		sessionStatus.setComplete();
 
-		// modelに格納する.
-		model.addAttribute("buyingHistory", buyingHistory);
+		// 入力されたデータをリダイレクト先でも利用可能にする。
+		redirectAttributes.addFlashAttribute("buyingHistory", buyingHistory);
 
 		return "redirect:/ordercomplete";
 	}

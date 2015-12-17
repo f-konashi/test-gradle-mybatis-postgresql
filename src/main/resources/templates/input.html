@@ -1,12 +1,12 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
-<title>ユーザー登録画面｜自作プロジェクト</title>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='会員登録')">
 </head>
 <body>
-	<h1>ユーザー登録画面(input.html)</h1>
+	<h1>会員登録画面(input.html)</h1>
 	<form th:action="@{/addUser}" th:object="${userInfoForm}" method="post">
 		<table class="input_table">
 			<tr>
@@ -21,7 +21,7 @@
 			<tr>
 				<th>性別</th>
 				<td>
-					男<input type="radio" value="男" checked="checked" th:field="*{gender}" th:errorclass="fieldError" />
+					男<input type="radio" value="男" th:checked="true" th:field="*{gender}" th:errorclass="fieldError" />
 					女<input type="radio" value="女" th:field="*{gender}" th:errorclass="fieldError" />
 				</td>
 				<td th:if="${#fields.hasErrors('*')}">
@@ -51,8 +51,6 @@
 		</table>
 		<input class="submit" type="submit" value="会員登録する" />
 	</form>
-	<p>
-		<a href="/">TOP画面へ</a>
-	</p>
+	<footer th:include="fragments/common::footer"></footer>
 </body>
 </html>

@@ -3,11 +3,13 @@
 body {
 	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
 		'ＭＳ Ｐゴシック', sans-serif !important;
+	font-size: 90%;
 }
 
 table, tr, th, td {
 	border: 1px solid #000;
 	border-collapse: collapse;
+	text-align: center;
 }
 
 th {

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>決済完了画面｜自作プロジェクト</title>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='注文完了')">
 </head>
 <body>
-	<h1>決済完了画面(ordercomplete.html)</h1>
+	<h1>注文完了画面(ordercomplete.html)</h1>
 
 	<p>以下の内容で、注文が確定しました。</p>
-	<table border="1" style="width: 50%; height: 50%">
+	<table>
 		<tr>
 			<th>購入日時</th>
 			<th>決済方法</th>
@@ -16,12 +17,12 @@
 			<th>購入合計金額(税込)</th>
 		</tr>
 		<tr>
-			<td width="25%"><span th:text="${#dates.format(buyingHistory.buyingDate, 'yyyy/MM/dd H:mm')}"></span></td>
-			<td width="25%"><span th:text="${buyingHistory.payment}"></span></td>
-			<td width="25%"><span th:text="${buyingHistory.delivery}"></span></td>
-			<td width="25%"><span th:text="${buyingHistory.totalPrice}"></span>円</td>
+			<td><span th:text="${#dates.format(buyingHistory.buyingDate, 'yyyy/MM/dd H:mm')}"></span></td>
+			<td><span th:text="${buyingHistory.payment}"></span></td>
+			<td><span th:text="${buyingHistory.delivery}"></span></td>
+			<td><span th:text="${buyingHistory.totalPrice}"></span>円</td>
 		</tr>
 	</table>
-	<p><a href="/">トップ画面へ</a></p>
+	<footer th:include="fragments/common::footer"></footer>
 </body>
 </html>

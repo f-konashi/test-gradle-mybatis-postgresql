@@ -1,4 +1,4 @@
-package sample.form;
+package sample.util;
 
 /**
  * ブラウザ上に表示されるメッセージを一元管理する為のクラスです.

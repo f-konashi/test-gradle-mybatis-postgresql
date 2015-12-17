@@ -1,27 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style type="text/css">
-<!--
-body {
-	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
-		'ＭＳ Ｐゴシック', sans-serif !important;
-	font-size: 90%;
-}
-
-table, tr, th, td {
-	border: 1px solid #000;
-	border-collapse: collapse;
-}
-
-th {
-	background-color: #666;
-	color: #fff;
-}
--->
-</style>
-<title>会員情報確認画面｜自作プロジェクト</title>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='マイページ')">
 </head>
 <body>
 	<h1>会員情報確認画面(mypage.html)</h1>
@@ -47,8 +29,6 @@ th {
 			<td><span th:text="*{password}"></span></td>
 		</tr>
 	</table>
-	<p>
-		<a href="/">トップ画面へ</a>
-	</p>
+	<footer th:include="fragments/common::footer"></footer>
 </body>
 </html>

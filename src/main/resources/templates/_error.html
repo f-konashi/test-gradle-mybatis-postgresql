@@ -1,0 +1,14 @@
+<!--/ *エラーの際に呼び出されるページ(error.htmlを作成するだけで、Springが自動的に呼び出してくれる) */-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='エラー')">
+</head>
+<body>
+	<h1>エラー画面(error.html)</h1>
+	<p>エラーが発生しました。</p>
+	<footer th:include="fragments/common::footer"></footer>
+</body>
+</html>

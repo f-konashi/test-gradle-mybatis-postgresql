@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>買い物かご｜自作プロジェクト</title>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='買い物かご')">
 </head>
 <body>
 	<h1>買い物かご画面(shoppingcart.html)</h1>
@@ -17,7 +18,7 @@
 	
 	<!--/* start▼買い物かごに入れている商品がある場合のみ表示する▼ */-->
 	<div th:if="${itemInCartList.size() != 0}">
-		<table border="1" style="width: 50%; height: 50%">
+		<table>
 			<tr>
 				<th>商品管理番号</th>
 				<th>商品名</th>
@@ -27,12 +28,12 @@
 				<th>削除</th>
 			</tr>
 			<tr th:each="list : ${itemInCartList}">
-				<td width="15%"><span th:text="${list.itemId}"></span></td>
-				<td width="25%"><span th:text="${list.name}"></span></td>
-				<td width="25%"><span th:text="${list.price}">円</span></td>
-				<td width="25%"><span th:text="${list.postage}">円</span></td>
-				<td width="25%"><span th:text="${list.itemCount}"></span></td>
-				<td width="25%">
+				<td><span th:text="${list.itemId}"></span></td>
+				<td><span th:text="${list.name}"></span></td>
+				<td><span th:text="${list.price}"></span>円</td>
+				<td><span th:text="${list.postage}"></span>円</td>
+				<td><span th:text="${list.itemCount}"></span></td>
+				<td>
 					<form action="#" th:action="@{/deleteItemInCart}" method="post">
 						<input type="hidden" name="cartId" th:value="${list.cartId}" />
 						<input type="submit" value="削除" />
@@ -40,16 +41,14 @@
 				</td>
 			</tr>
 		</table>
-		<form action="#" th:action="@{/deleteItemAllInCart}" method="post" style="padding-top: 10px">
-			<input type="submit" value="買い物かごの中身を全て削除する" />
+		<form action="#" th:action="@{/deleteItemAllInCart}" method="post">
+			<input class="submit" type="submit" value="買い物かごの中身を全て削除する" />
 		</form>
-		<form action="#" th:action="@{/orderform}" method="post" style="padding-top: 10px">
-			<input type="submit" value="注文画面へ進む" />
+		<form action="#" th:action="@{/orderform}" method="post">
+			<input class="submit" type="submit" value="注文画面へ進む" />
 		</form>
 	</div>
 	<!--/* end  ▲買い物かごに入れている商品がある場合のみ表示する▲ */-->
-	<p>
-		<a href="/">トップ画面へ</a>
-	</p>
+	<footer th:include="fragments/common::footer"></footer>
 </body>
 </html>

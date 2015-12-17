@@ -1,27 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<style type="text/css">
-<!--
-body {
-	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
-		'ＭＳ Ｐゴシック', sans-serif !important;
-	font-size: 90%;
-}
-
-table, tr, th, td {
-	border: 1px solid #000;
-	border-collapse: collapse;
-}
-
-th {
-	background-color: #666;
-	color: #fff;
-}
--->
-</style>
-<title>トップ画面｜自作プロジェクト</title>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
+<head th:include="fragments/common::head (title='トップページ')">
 </head>
 <body>
 	<h1>トップ画面(index.html)</h1>
@@ -34,7 +16,7 @@ th {
 	<!--/* start▼未ログイン時の表示メニュー▼ */-->
 	<div th:if="${#httpServletRequest.remoteUser == null}">
 		<p>
-			こんにちは <span>ゲスト</span> さん
+			こんにちは<span class="bold_name">ゲスト</span>さん
 		</p>
 		<p>
 			<a href="/input">1.会員登録する</a>
@@ -48,7 +30,7 @@ th {
 	<!--/* start▼既ログイン時の表示メニュー▼ */-->
 	<div th:if="${#httpServletRequest.remoteUser != null}">
 		<p th:inline="text">
-			こんにちは <span>[[${#httpServletRequest.remoteUser}]] </span>さん
+			こんにちは<span class="bold_name">[[${#httpServletRequest.remoteUser}]]</span>さん
 		</p>
 		<p>
 			<a th:href="@{/mypage}">1.会員情報確認</a>
@@ -68,7 +50,7 @@ th {
 	<!--/* start▼共通部分▼ */-->
 	<h2>商品一覧</h2>
 	<div>
-		<table border="1" style="width: 50%; height: 50%">
+		<table>
 			<tr>
 				<th>商品管理番号</th>
 				<th>商品名</th>
@@ -78,12 +60,12 @@ th {
 				<th></th>
 			</tr>
 			<tr th:each="list : ${itemInfoList}">
-				<td width="15%"><span th:text="${list.itemId}"></span></td>
-				<td width="15%"><span th:text="${list.name}"></span></td>
-				<td width="25%"><span th:text="${list.price}"></span>円</td>
-				<td width="25%"><span th:text="${list.postage}"></span>円</td>
-				<td width="25%"><span th:text="${list.stock}"></span></td>
-				<td width="25%">
+				<td><span th:text="${list.itemId}"></span></td>
+				<td><span th:text="${list.name}"></span></td>
+				<td><span th:text="${list.price}"></span>円</td>
+				<td><span th:text="${list.postage}"></span>円</td>
+				<td><span th:text="${list.stock}"></span></td>
+				<td>
 					<form th:action="@{/addItemInCart}" method="post">
 						<span>注文数</span>
 						<select name="itemCount">

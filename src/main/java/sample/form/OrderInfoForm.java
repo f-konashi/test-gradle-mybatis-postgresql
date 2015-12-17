@@ -4,6 +4,8 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import sample.util.Message;
+
 public class OrderInfoForm {
 	@Pattern(regexp="\\d{3}", message="3桁の数字を入力して下さい。")
 	@NotEmpty(message = Message.ERROR_EMPTY)

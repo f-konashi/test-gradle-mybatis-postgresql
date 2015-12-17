@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:fragment="head">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+<!--
+body {
+	font-family: 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo,
+		'ＭＳ Ｐゴシック', sans-serif !important;
+	font-size: 90%;
+}
+
+table, tr, th, td {
+	border: 1px solid #000;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 5px;
+	text-align: center;
+}
+
+th {
+	background-color: #3300ff;
+	color: #fff;
+	font-weight: normal;
+}
+
+td {
+
+}
+
+.ok {
+	color: green;
+}
+
+.ng {
+	color: #ff8080;
+}
+
+.fieldError {
+	background-color: #ff8080;
+}
+
+.submit {
+	margin-top: 20px;
+}
+
+.bold_name {
+	font-weight: bold;
+	padding: 0 10px;
+}
+
+.bold {
+	font-weight: bold;
+}
+-->
+</style>
+<title th:text="${title} + '｜サンプルプロジェクト'"></title>
+</head>
+<body>
+	<header th:fragment="header"> ヘッダー部分です。 </header>
+	<footer th:fragment="footer">
+		<p>
+			<a href="/">トップページへ戻る</a>
+		</p>
+	</footer>
+</body>
+</html>
