@@ -2,7 +2,6 @@ package sample.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,19 +22,20 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+
 import sample.form.UserInfoForm;
 import sample.form.OrderInfoForm;
 import sample.model.BuyingHistory;
-import sample.model.ItemInCart;
+import sample.model.UserInfo;
 import sample.model.ItemInfo;
 import sample.model.ItemInfoEx;
-import sample.model.UserInfo;
-import sample.security.MyUserDetails;
-import sample.service.BuyingHistoryService;
+import sample.model.ItemInCart;
 import sample.service.CommonService;
-import sample.service.ItemInCartService;
-import sample.service.ItemInfoService;
 import sample.service.UserInfoService;
+import sample.service.ItemInfoService;
+import sample.service.ItemInCartService;
+import sample.service.BuyingHistoryService;
+import sample.security.MyUserDetails;
 
 /**
  * アプリケーション全体を制御するクラス(コントローラークラス)です.
@@ -46,7 +46,7 @@ import sample.service.UserInfoService;
 @Controller
 @EnableAutoConfiguration
 @SessionAttributes(value = { "itemInfoInCartList", "postage", "total" })
-public class TestController {
+public class TestController extends CommonController {
     @Autowired
     private CommonService commonService;
     
@@ -75,6 +75,17 @@ public class TestController {
 	UserInfoForm setupUserInfoForm() {
 		return new UserInfoForm();
 	}
+	
+    /**
+     * 決済ページ(orderform.html)で、入力フォームに対応したオブジェクトを初期化し、Modelに追加する.
+     * (Thymeleafからアクセスさせるために必要).
+     * 
+     * @return　決済ページでの入力フォーム値を格納するオブジェクト
+     */
+    @ModelAttribute
+    OrderInfoForm setupUserOrderInfoForm() {
+        return new OrderInfoForm();
+    }
 	
 	// *********************************************************************
     // displayメソッド一覧
@@ -140,24 +151,6 @@ public class TestController {
     }
     
     /**
-     * 個別会員情報をデータベースから呼び出し、画面出力します.
-     * 
-     * @param model
-     * @param principal
-     * @return ブラウザに表示するページ
-     */
-    @RequestMapping(value = "/mypage")
-    public String displayUserInfo(Model model, Principal principal) {
-        // ログイン済の会員情報を取得する.
-        MyUserDetails loginUserData = getLoginUserData(principal);
-
-        // 個別会員情報をデータベースから取得し、modelに格納する.
-        UserInfo userInfo = userInfoService.getUserByLoginId(loginUserData.getLoginId());
-        model.addAttribute("userInfo", userInfo);
-        return "mypage";
-    }
-    
-    /**
      * 会員登録完了画面をブラウザに表示します.
      * 
      * @param model
@@ -217,7 +210,7 @@ public class TestController {
 		userInfo.setPassword(new StandardPasswordEncoder().encode(inputUserInfo.getPassword()));
 
 		// 入力されたデータをリダイレクト先でも利用可能にする。
-		userInfoService.registUser(userInfo);
+		userInfoService.registerUser(userInfo);
 		redirectAttributes.addFlashAttribute("userInfo", userInfo);
         return "redirect:/regist";
 	}
@@ -374,16 +367,5 @@ public class TestController {
 	 */
 	private List<ItemInfoEx> getAllItemInfoInCart(Integer userId) {
 		return itemInCartService.getItemInCart(userId);
-	}
-
-	/**
-	 * ログインユーザーの会員情報を取得します.
-	 * 
-	 * @param principal
-	 * @return 会員情報
-	 */
-	private MyUserDetails getLoginUserData(Principal principal) {
-		Authentication auth = (Authentication) principal;
-		return (MyUserDetails) auth.getPrincipal();
 	}
 }

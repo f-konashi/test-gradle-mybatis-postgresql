@@ -1,7 +1,6 @@
 package sample.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,29 +24,18 @@ import sample.service.BuyingHistoryService;
 
 @Controller
 @RequestMapping("/buyinghistory")
-public class BuyingHistoryController {
+public class BuyingHistoryController extends CommonController {
     @Autowired
     private BuyingHistoryService buyingHistoryService;
     
     /**
-     * 画面で使うフォームに対応したオブジェクトを初期化し、Modelに追加する
+     * 購入履歴画面で使うフォームに対応したオブジェクトを初期化し、Modelに追加する
      * (Thymeleafからアクセスさせるために必要).
      * 
      * @return 決済画面でのフォーム入力値を格納するオブジェクト
      */
     @ModelAttribute
     BuyingHistorySortForm setupOrderBuyingHistorySortForm() {
-        return new BuyingHistorySortForm();
-    }
-
-    /**
-     * 購入履歴画面で使用するフォームに対応したオブジェクトを初期化し、Modelに追加する
-     * (Thymeleafからアクセスさせるために必要).
-     * 
-     * @return　購入履歴画面でのフォーム入力値を格納するオブジェクト
-     */
-    @ModelAttribute
-    BuyingHistorySortForm setupUserBuyingHistorySortForm() {
         return new BuyingHistorySortForm();
     }
     
@@ -106,20 +94,5 @@ public class BuyingHistoryController {
         model.addAttribute(buyingHistoryList);
 
         return "buyinghistory";
-    }
-    
-    // *********************************************************************
-    // privateメソッド一覧
-    // *********************************************************************
-
-    /**
-     * ログインユーザーの会員情報を取得します.
-     * 
-     * @param principal
-     * @return 会員情報
-     */
-    private MyUserDetails getLoginUserData(Principal principal) {
-        Authentication auth = (Authentication) principal;
-        return (MyUserDetails) auth.getPrincipal();
     }
 }

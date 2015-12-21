@@ -21,7 +21,7 @@
 			<tr>
 				<th>性別</th>
 				<td>
-					男<input type="radio" value="男" th:checked="true" th:field="*{gender}" th:errorclass="fieldError" />
+					男<input type="radio" value="男" th:field="*{gender}" th:errorclass="fieldError"/>
 					女<input type="radio" value="女" th:field="*{gender}" th:errorclass="fieldError" />
 				</td>
 				<td th:if="${#fields.hasErrors('*')}">
@@ -46,7 +46,8 @@
 				</td>
 				<td th:if="${#fields.hasErrors('*')}">
 					<span class="ng" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-					<span class="ok" th:if="${!#fields.hasErrors('password')}" th:text="OK"></span></td>
+					<span class="ok" th:if="${!#fields.hasErrors('password')}" th:text="OK"></span>
+			    </td>
 			</tr>
 		</table>
 		<input class="submit" type="submit" value="会員登録する" />

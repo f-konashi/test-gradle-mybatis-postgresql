@@ -34,6 +34,16 @@ public class UserInfoService {
     public UserInfo getUserByLoginId(String loginId) {
         return userInfoMapper.selectByLoginId(loginId);
     }
+    
+    /**
+     *　ログインIDで検索した結果を取得する。
+     *
+     *　@param String ログインID
+     * @return　UserInfo　検索に該当したユーザー情報
+     */
+    public UserInfo getUserWithoutPassByLoginId(String loginId) {
+        return userInfoMapper.selectWithoutPassByLoginId(loginId);
+    }
 
 	/**
 	 * 入力されたユーザーデータをデータベースに１件挿入する。
@@ -41,7 +51,7 @@ public class UserInfoService {
 	 * @param String ユーザー情報
 	 * @return　DBに挿入された件数
 	 */
-	public int registUser(UserInfo userInfo) {
+	public int registerUser(UserInfo userInfo) {
 		return userInfoMapper.insertOne(userInfo);
 	}
 }

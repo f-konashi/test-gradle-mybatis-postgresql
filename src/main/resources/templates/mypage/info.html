@@ -26,9 +26,14 @@
 		</tr>
 		<tr>
 			<th>パスワード</th>
-			<td><span th:text="*{password}"></span></td>
+			<td>セキュリティの為、表示しておりません。</td>
 		</tr>
 	</table>
+	<form th:action="@{/mypage/setting}" method="get">
+      <input class="submit" type="submit" value="会員情報を変更する" />
+    </form>
+    <!-- start▼フッター部分をインクルードする▼ -->
 	<footer th:include="fragments/common::footer"></footer>
+	<!-- end  ▲フッター部分をインクルードする▲ -->
 </body>
 </html>

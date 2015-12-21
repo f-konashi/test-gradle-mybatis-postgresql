@@ -26,7 +26,7 @@ public class UserInfoForm {
 	 * 選択されているかどうかバリデーションする.
 	 */
 	@NotEmpty(message = Message.ERROR_SELECT)
-	private String gender;
+	private String gender = "男";
 
 	/**
 	 * 入力フォームの「ログインID」テキストボックスに対応するフィールド.

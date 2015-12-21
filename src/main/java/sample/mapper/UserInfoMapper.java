@@ -63,26 +63,37 @@ public interface UserInfoMapper {
     int updateByPrimaryKey(UserInfo record);
     
 	/**
-	 * テーブルデータを全件取得する。
+     * 【SELECT:全件】
+	 * テーブルデータを全件取得する.
 	 * 
-	 * @param
-	 * @return
+	 * @return　全会員情報
 	 */
 	List<UserInfo> getAll();
 
 	/**
-	 * データを１件挿入する。
+     * 【SELECT:1件】
+     * 会員情報情報を、ログインIDから取得する.
+     * 
+     * @param　loginId　情報を取得したい会員のログインID
+     * @return　引数で指定したログインIDの会員情報
+     */
+    UserInfo selectByLoginId(String loginId);
+	
+    /**
+     * 【SELECT:1件】
+     * 会員情報情報を、ログインIDから取得する.
+     * 
+     * @param　loginId　情報を取得したい会員のログインID
+     * @return　引数で指定したログインIDの会員情報
+     */
+    UserInfo selectWithoutPassByLoginId(String loginId);
+    
+	/**
+	 * 【INSERT:1件】
+	 * 新規会員情報を1件挿入する.
 	 * 
-	 * @param
-	 * @return
+	 * @param　会員登録画面で入力された新規会員情報
+	 * @return デーブルにデータを挿入した件数
 	 */
 	int insertOne(UserInfo record);
-
-	/**
-	 * ログインIDからユーザー情報を取得する。
-	 * 
-	 * @param
-	 * @return
-	 */
-	UserInfo selectByLoginId(String loginId);
 }
