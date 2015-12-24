@@ -1,0 +1,22 @@
+●mypage/info.html
+
+↓「名前を変更する」ボタンをクリックする。
+
+●MyPageController#displaySetting
+
+↓ model.addAttribute("update", update);
+↓ model.addAttribute("userInfo", userInfo);
+
+●mypage/setting.html
+
+↓「変更する」ボタンをクリックする。
+
+●MyPageController#updateUserInfo
+↓バリデーションNG
+↓
+
+●mypage/setting.html
+↓バリデーションOK
+↓
+
+●mypage/info.html

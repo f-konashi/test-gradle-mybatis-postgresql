@@ -1,61 +1,71 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	  xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <!--/* ▼common.htmlファイルのheadタグ部分をインクルードする▼ */-->
 <head th:include="fragments/common::head (title='マイページ')">
 </head>
 <body>
-  <h1>会員情報確認画面(mypage.html)</h1>
-  <form th:action="@{/updateUser}" th:object="${userInfoForm}" method="post">
-	<table th:object="${userInfo}">
-		<tr>
-			<th>会員番号</th>
-			<td>
-			  <span th:text="*{userId}"></span><br />
-			  <span class="red">※会員番号は変更できません</span>
-			</td>
-		</tr>
-		<tr>
-		  <th>名前</th>
-		  <td>
-			<input type="text" th:field="*{name}" th:value="*{name}" th:errorclass="fieldError" /></td>
-		  <td th:if="${#fields.hasErrors('*')}">
-			<span class="ng" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
-	        <span class="ok" th:if="${!#fields.hasErrors('name')}" th:text="OK"></span>
-		  </td>
-		</tr>
-		<tr>
-		　　<th>性別</th>
-		　　<td>
-　　　　　　　　　　　男<input type="radio" value="男" th:checked="true" th:field="*{gender}" th:errorclass="fieldError" />
-　　　　　　　　　　　女<input type="radio" value="女" th:field="*{gender}" th:errorclass="fieldError" />
-		　　</td>
-		　　<td th:if="${#fields.hasErrors('*')}">
-		　　　　<span class="ng" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}" th:checked="${'checked'}"></span>
-		　　　　<span class="ok" th:if="${!#fields.hasErrors('gender')}" th:text="OK"></span>
-		　　</td>
-		</tr>
-		<tr>
-		　　<th>ログインID</th>
-		　　<td>
-            <span th:text="*{loginId}"></span><br />
-            <span class="red">※ログインIDは変更できません</span>
-		　　</td>
-		</tr>
-		<tr>
-		　　<th>パスワード</th>
-		　　<td><input type="password" th:field="*{password}" th:errorclass="fieldError" /></td>
-		  <td th:if="${#fields.hasErrors('*')}">
-		    <span class="ng" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-			<span class="ok" th:if="${!#fields.hasErrors('password')}" th:text="OK"></span>
-		  </td>
-		</tr>
-	</table>
-  <input class="submit" type="submit" value="この内容で変更する" />
-  </form>
-  <!-- begin▼フッター部分をインクルードする▼ -->
-  <footer th:include="fragments/common::footer"></footer>
-  <!-- end  ▲フッター部分をインクルードする▲ -->
+	<h1>会員情報確認画面(mypage/setting.html)</h1>
+	<p>変更したい項目にチェックをし、変更後の内容を入力して下さい。</p>
+	<form th:action="@{/mypage/updateUser}" th:object="${userInfoForm}" method="post">
+		<table>
+			<tr>
+				<th>会員番号</th>
+				<td><span th:text="${userInfo.userId}"></span></td>
+			</tr>
+			<tr th:if="${update !='name'}">
+				<th>名前</th>
+				<td><span th:text="*{name}"></span></td>
+			</tr>
+			<tr th:if="${update =='name'}">
+				<th>名前</th>
+				<td><input type="text" th:field="${userInfo.name}"
+					th:errorclass="fieldError" /></td>
+				<td th:if="${#fields.hasErrors('*')}">
+				　　<span class="ng" th:if="${#fields.hasErrors('name')}" th:errors="${userInfoForm.name}"></span>
+				　　<span class="ok" th:if="${!#fields.hasErrors('name')}" th:text="OK"></span>
+				</td>
+			</tr>
+			<tr th:if="${update !='gender'}">
+				<th>性別</th>
+				<td><span th:text="${userInfo.gender}"></span></td>
+			</tr>
+			<tr th:if="${update =='gender'}">
+				<th>性別</th>
+				<td>男<input type="radio" value="男" th:checked="true"
+					th:field="*{gender}" th:errorclass="fieldError" /> 
+					女<input type="radio" value="女" th:field="*{gender}"
+					th:errorclass="fieldError" />
+				</td>
+				<td th:if="${#fields.hasErrors('*')}"><span class="ng"
+					th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"
+					th:checked="${'checked'}"></span> <span class="ok"
+					th:if="${!#fields.hasErrors('gender')}" th:text="OK"></span></td>
+			</tr>
+			<tr>
+				<th>ログインID</th>
+				<td><span th:text="*{loginId}"></span></td>
+			</tr>
+			<tr th:if="${update !='password'}">
+				<th>パスワード</th>
+				<td>セキュリティの為、表示しておりません。</td>
+			</tr>
+			<tr th:if="${update =='password'}">
+				<th>パスワード</th>
+				<td><input type="password" th:field="*{password}"
+					th:errorclass="fieldError" /></td>
+				<td th:if="${#fields.hasErrors('*')}">
+				  <span class="ng" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+			      <span class="ok" th:if="${!#fields.hasErrors('password')}" th:text="OK"></span>
+			    </td>
+			</tr>
+		</table>
+		<input type="hidden" name="update" th:value="${update}" />
+		<input class="submit" type="submit" value="この内容で変更する" />
+	</form>
+	<!-- begin▼フッター部分をインクルードする▼ -->
+	<footer th:include="fragments/common::footer"></footer>
+	<!-- end  ▲フッター部分をインクルードする▲ -->
 </body>
 </html>
