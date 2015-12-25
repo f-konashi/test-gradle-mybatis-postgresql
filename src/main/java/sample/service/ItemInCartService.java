@@ -27,8 +27,7 @@ public class ItemInCartService {
 	 *	Integer itemId: 商品管理番号
 	 *	Integer itemCount:　商品個数
 	 *
-	 * @return int: 買い物かごに追加した商品数
-	 * 	・null値がリターンされることはない。
+	 * @return 買い物かごに追加した商品数 (not return Null)
 	 */
 	public int setItemInCart(ItemInCart itemInCart) {
 		return itemInCartMapper.insertOne(itemInCart);
@@ -38,8 +37,7 @@ public class ItemInCartService {
 	 * 
 	 * @param userId:　会員管理番号
 	 * 
-	 * @return List<ItemInfo>: 買い物かごに入っている商品リスト
-	 * 	・null値がリターンされることはない。
+	 * @return 買い物かごに入っている商品リスト (not return Null)
 	 */
 	public List<ItemInfoEx> getItemInCart(Integer userId) {
 		return itemInCartMapper.selectItemInCart(userId);
@@ -49,8 +47,7 @@ public class ItemInCartService {
 	 * 
 	 * 
 	 * @param userId　
-	 * @return int 削除された件数
-	 * 	・null値がリターンされることはない。
+	 * @return int 削除された件数 (not return Null)
 	 */
 	public int deleteItemInCart(Integer cartid) {
 		return itemInCartMapper.deleteItemInCartByCartId(cartid);
@@ -61,8 +58,7 @@ public class ItemInCartService {
 	 * 
 	 * 
 	 * @param userId　
-	 * @return int 削除された件数
-	 * 	・null値がリターンされることはない。
+	 * @return int 削除された件数 (not return Null)
 	 */
 	public int deleteItemAllInCart(Integer userId) {
 		return itemInCartMapper.deleteItemByUserId(userId);

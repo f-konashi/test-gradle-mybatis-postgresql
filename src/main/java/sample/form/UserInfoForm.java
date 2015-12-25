@@ -33,7 +33,7 @@ public class UserInfoForm {
     private String loginId;
 
     /**
-     * 入力フォームの「ログインID」テキストボックスに対応するフィールド. 5文字以上50文字以内で入力されているかバリデーションする.
+     * 入力フォームの「パスワード」テキストボックスに対応するフィールド. 5文字以上50文字以内で入力されているかバリデーションする.
      */
     @NotEmpty(message = Message.ERROR_EMPTY)
     @Length(min = 5, max = 50, message = Message.ERROR_MINMAX_LENGTH)

@@ -7,48 +7,32 @@
 </head>
 <body>
 	<h1>会員情報確認画面(mypage/info.html)</h1>
+	<p th:if="${update}">会員情報を変更しました。</p>
 	<table th:object="${userInfo}">
 		<tr>
 			<th>会員番号</th>
 			<td><span th:text="*{userId}"></span></td>
-			<td></td>
 		</tr>
 		<tr>
 			<th>名前</th>
 			<td><span th:text="*{name}"></span></td>
-			<td>
-			    <form th:action="@{/mypage/setting}" method="get">
-			    	<input type="hidden" name="update" value="name" />
-					<input type="submit" value="名前を変更する" />
-				</form>
-			</td>
 		</tr>
 		<tr>
 			<th>性別</th>
 			<td><span th:text="*{gender}"></span></td>
-			<td>
-				<form th:action="@{/mypage/setting}" method="get">
-					<input type="hidden" name="update" value="gender" />
-					<input type="submit" value="性別を変更する" />
-				</form>
-			</td>
 		</tr>
 		<tr>
 			<th>ログインID</th>
 			<td><span th:text="*{loginId}"></span></td>
-			<td></td>
 		</tr>
 		<tr>
 			<th>パスワード</th>
 			<td>セキュリティの為、表示しておりません。</td>
-			<td>
-				<form th:action="@{/mypage/setting}" method="get">
-					<input type="hidden" name="update" value="password" />
-					<input type="submit" value="パスワードを変更する" />
-				</form>
-			</td>
 		</tr>
 	</table>
+	<form th:action="@{/mypage/setting}" method="get">
+	  <input class="submit" type="submit" value="会員情報を変更する" />
+	</form>
 	<!-- start▼フッター部分をインクルードする▼ -->
 	<footer th:include="fragments/common::footer"></footer>
 	<!-- end  ▲フッター部分をインクルードする▲ -->

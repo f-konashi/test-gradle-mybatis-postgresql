@@ -221,5 +221,16 @@
 		  login_id = #{login_id}
 	</select>
 	
+	<update id="updateUserInfo" parameterType="sample.model.UserInfo">
+		UPDATE 
+		  public.user_info
+		SET 
+		  password = #{password,jdbcType=VARCHAR},
+		  name = #{name,jdbcType=VARCHAR},
+		  gender = #{gender,jdbcType=VARCHAR}
+		WHERE
+		  login_id = #{loginId,jdbcType=VARCHAR}
+	</update>
+	
 	<!-- end ▲追加▲ -->
 </mapper>

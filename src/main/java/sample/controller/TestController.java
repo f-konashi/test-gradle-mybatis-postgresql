@@ -1,12 +1,13 @@
 package sample.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,8 @@ import sample.security.MyUserDetails;
 @EnableAutoConfiguration
 @SessionAttributes(value = { "itemInfoInCartList", "postage", "total" })
 public class TestController extends CommonController {
+    private static final Logger logger = LoggerFactory.getLogger(TestController.class);
+    
     @Autowired
     private CommonService commonService;
     
@@ -186,13 +189,15 @@ public class TestController extends CommonController {
 	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
 	public String insertOne(RedirectAttributes redirectAttributes,
 	        @Valid UserInfoForm inputUserInfo, BindingResult result) {
-
+	    
 		// フォーム入力値をチェックし、エラーがあれば会員登録ページにエラーを表示させる.
 		if (result.hasErrors()) {
-			for (FieldError err : result.getFieldErrors()) {
-				// log.debug("error code = [" + err.getCode() + "]");
-				System.out.println(err);
-			}
+		    logger.error("入力エラー");
+//			for (FieldError err : result.getFieldErrors()) {
+//				// log.debug("error code = [" + err.getCode() + "]");
+//			    
+//				System.out.println(err);
+//			}
 	        return "/input";
 		}
 
@@ -208,9 +213,9 @@ public class TestController extends CommonController {
 		// userInfo.setPassword(new
 		// ShaPasswordEncoder(256).encodePassword(password, null));
 		userInfo.setPassword(new StandardPasswordEncoder().encode(inputUserInfo.getPassword()));
-
+        userInfoService.registerUser(userInfo);
+		
 		// 入力されたデータをリダイレクト先でも利用可能にする。
-		userInfoService.registerUser(userInfo);
 		redirectAttributes.addFlashAttribute("userInfo", userInfo);
         return "redirect:/regist";
 	}
@@ -313,10 +318,13 @@ public class TestController extends CommonController {
 		
 		// フォーム入力値をチェックし、エラーがあれば会員登録ページにエラーを表示させる.
 		if (result.hasErrors()) {
-			for (FieldError err : result.getFieldErrors()) {
-				// log.debug("error code = [" + err.getCode() + "]");
-				System.out.println(err);
-			}
+            logger.error("入力エラー");
+//			for (FieldError err : result.getFieldErrors()) {
+//				// log.debug("error code = [" + err.getCode() + "]");
+//			    logger.error(err.toString());
+//			    logger.debug(err.toString());
+//				System.out.println(err);
+//			}
 			return "orderform";
 		}
 		

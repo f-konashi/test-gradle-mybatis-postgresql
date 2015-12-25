@@ -7,61 +7,47 @@
 </head>
 <body>
 	<h1>会員情報確認画面(mypage/setting.html)</h1>
-	<p>変更したい項目にチェックをし、変更後の内容を入力して下さい。</p>
-	<form th:action="@{/mypage/updateUser}" th:object="${userInfoForm}" method="post">
-		<table>
+	<p>変更後の内容を入力して下さい。</p>
+	<form th:action="@{/mypage/updateUser}" th:object="${updateUserInfoForm}" method="post">
+		<table >
 			<tr>
 				<th>会員番号</th>
-				<td><span th:text="${userInfo.userId}"></span></td>
+				<td><span th:text="${userInfo.userId}"></span>※変更不可</td>
+				<td th:if="${#fields.hasErrors('*')}"></td>
 			</tr>
-			<tr th:if="${update !='name'}">
+			<tr>
 				<th>名前</th>
-				<td><span th:text="*{name}"></span></td>
-			</tr>
-			<tr th:if="${update =='name'}">
-				<th>名前</th>
-				<td><input type="text" th:field="${userInfo.name}"
-					th:errorclass="fieldError" /></td>
+				<td><input type="text" th:field="*{name}" th:errorclass="fieldError" /></td>
 				<td th:if="${#fields.hasErrors('*')}">
-				　　<span class="ng" th:if="${#fields.hasErrors('name')}" th:errors="${userInfoForm.name}"></span>
+				　　<span class="ng" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 				　　<span class="ok" th:if="${!#fields.hasErrors('name')}" th:text="OK"></span>
 				</td>
 			</tr>
-			<tr th:if="${update !='gender'}">
+			<tr>
 				<th>性別</th>
-				<td><span th:text="${userInfo.gender}"></span></td>
-			</tr>
-			<tr th:if="${update =='gender'}">
-				<th>性別</th>
-				<td>男<input type="radio" value="男" th:checked="true"
-					th:field="*{gender}" th:errorclass="fieldError" /> 
-					女<input type="radio" value="女" th:field="*{gender}"
-					th:errorclass="fieldError" />
+				<td>
+				    男<input type="radio" value="男" th:checked="true" th:field="*{gender}" th:errorclass="fieldError" /> 
+				    女<input type="radio" value="女" th:field="*{gender}" th:errorclass="fieldError" />
 				</td>
-				<td th:if="${#fields.hasErrors('*')}"><span class="ng"
-					th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"
-					th:checked="${'checked'}"></span> <span class="ok"
-					th:if="${!#fields.hasErrors('gender')}" th:text="OK"></span></td>
+				<td th:if="${#fields.hasErrors('*')}">
+				  <span class="ng" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
+				  <span class="ok" th:if="${!#fields.hasErrors('gender')}" th:text="OK"></span>
+				</td>
 			</tr>
 			<tr>
 				<th>ログインID</th>
-				<td><span th:text="*{loginId}"></span></td>
+				<td><span th:text="${userInfo.loginId}"></span>※変更不可</td>
+				<td th:if="${#fields.hasErrors('*')}"></td>
 			</tr>
-			<tr th:if="${update !='password'}">
+			<tr>
 				<th>パスワード</th>
-				<td>セキュリティの為、表示しておりません。</td>
-			</tr>
-			<tr th:if="${update =='password'}">
-				<th>パスワード</th>
-				<td><input type="password" th:field="*{password}"
-					th:errorclass="fieldError" /></td>
+				<td><input type="password" th:field="*{password}" th:errorclass="fieldError" /></td>
 				<td th:if="${#fields.hasErrors('*')}">
 				  <span class="ng" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
 			      <span class="ok" th:if="${!#fields.hasErrors('password')}" th:text="OK"></span>
 			    </td>
 			</tr>
 		</table>
-		<input type="hidden" name="update" th:value="${update}" />
 		<input class="submit" type="submit" value="この内容で変更する" />
 	</form>
 	<!-- begin▼フッター部分をインクルードする▼ -->

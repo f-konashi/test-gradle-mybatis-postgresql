@@ -17,8 +17,8 @@ spring:
     cache: false
     encoding: UTF-8
 logging:
-    file: app.log
-    path: /var/log
+    file: log/test.log
+    #path: /var/log
     level:
       # TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
       org.springframework.web: INFO

@@ -5,14 +5,14 @@ import java.security.Principal;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import sample.form.UpdateUserInfoForm;
 import sample.form.UserInfoForm;
 import sample.model.UserInfo;
 import sample.security.MyUserDetails;
@@ -34,6 +34,27 @@ public class MyPageController extends CommonController {
     UserInfoForm setupUserInfoForm() {
         return new UserInfoForm();
     }
+    
+    /**
+     * 会員登録画面で使用するフォームに対応したオブジェクトを初期化し、Modelに追加する (Thymeleafからアクセスさせるために必要).
+     * 
+     * @return 会員登録画面でのフォーム入力値を格納するオブジェクト
+     */
+    @ModelAttribute
+    UpdateUserInfoForm setupUpdateUserInfoForm(Principal principal) {
+        // ログインユーザーの会員情報を取得する.
+        MyUserDetails loginUserData = getLoginUserData(principal);
+        
+        // 個別会員情報をデータベースから取得し、modelに格納する.
+        UserInfo userInfo = userInfoService.getUserWithoutPassByLoginId(loginUserData.getLoginId());
+        
+        // 取得した会員情報を会員情報変更ページのフォーム値のデフォルト値として表示する為の設定
+        UpdateUserInfoForm updateUserInfoForm = new UpdateUserInfoForm();
+        updateUserInfoForm.setName(userInfo.getName());
+        updateUserInfoForm.setGender(userInfo.getGender());
+        
+        return updateUserInfoForm;
+    }
 
     /**
      * 個別会員情報をデータベースから呼び出し、画面出力します.
@@ -50,7 +71,7 @@ public class MyPageController extends CommonController {
         // 個別会員情報をデータベースから取得し、modelに格納する.
         UserInfo userInfo = userInfoService.getUserWithoutPassByLoginId(loginUserData.getLoginId());
         model.addAttribute("userInfo", userInfo);
-        return "mypage/info";
+        return "/mypage/info";
     }
 
     /**
@@ -62,16 +83,13 @@ public class MyPageController extends CommonController {
      * @return
      */
     @RequestMapping("/setting")
-    public String displaySetting(Model model, Principal principal, @RequestParam("update") String update) {
+    public String displaySetting(Model model, Principal principal) {
         // ログインユーザーの会員情報を取得する.
         MyUserDetails loginUserData = getLoginUserData(principal);
 
         // 個別会員情報をデータベースから取得し、modelに格納する.
         UserInfo userInfo = userInfoService.getUserWithoutPassByLoginId(loginUserData.getLoginId());
         model.addAttribute("userInfo", userInfo);
-        
-        // 変更する項目をビューに渡す.
-        model.addAttribute("update", update);
         
         return "/mypage/setting";
     }
@@ -85,25 +103,36 @@ public class MyPageController extends CommonController {
      * @return
      */
     @RequestMapping("/updateUser")
-    public String updateUserInfo(Model model, Principal principal, @Valid UserInfoForm userInfoForm,
-            BindingResult result,
-            @RequestParam("update") String update) {
+    public String updateUserInfo(Model model, Principal principal, 
+            @Valid UpdateUserInfoForm updateUserInfoForm, BindingResult result) {
         // ログインユーザーの会員情報を取得する.
         MyUserDetails loginUserData = getLoginUserData(principal);
-        
-        // 個別会員情報をデータベースから取得し、modelに格納する.
-        UserInfo userInfo = userInfoService.getUserWithoutPassByLoginId(loginUserData.getLoginId());
-        model.addAttribute("userInfo", userInfo);
-        
+
         // フォーム入力値をチェックし、エラーがあれば会員変更ページにエラーを表示させる.
         if (result.hasErrors()) {
-            for (FieldError err : result.getFieldErrors()) {
-                // log.debug("error code = [" + err.getCode() + "]");
-                System.out.println(err);
-            }
-            model.addAttribute("update", update);
+//            for (FieldError err : result.getFieldErrors()) {
+//                log.debug("error code = [" + err.getCode() + "]");
+//                System.out.println(err);
+//            }
+            // 個別会員情報をデータベースから取得し、modelに格納する.
+            UserInfo userInfo = userInfoService.getUserWithoutPassByLoginId(loginUserData.getLoginId());
+            model.addAttribute("userInfo", userInfo);
             return "mypage/setting";
         }
+        
+        // 会員情報を変更する.
+        UserInfo userInfo = new UserInfo();
+        userInfo.setLoginId(loginUserData.getLoginId());
+        userInfo.setName(updateUserInfoForm.getName());
+        userInfo.setGender(updateUserInfoForm.getGender());
+        userInfo.setPassword(new StandardPasswordEncoder().encode(updateUserInfoForm.getPassword()));
+        System.out.println(userInfoService.updateUser(userInfo));
+        
+        // 個別会員情報をデータベースから取得し、modelに格納する.
+        UserInfo updatedUserInfo = userInfoService.getUserWithoutPassByLoginId(loginUserData.getLoginId());
+        model.addAttribute("userInfo", updatedUserInfo);
+        
+        model.addAttribute("update", true);
         return "mypage/info";
     }
 }

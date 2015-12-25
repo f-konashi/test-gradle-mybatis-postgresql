@@ -96,4 +96,13 @@ public interface UserInfoMapper {
 	 * @return デーブルにデータを挿入した件数
 	 */
 	int insertOne(UserInfo record);
+	
+    /**
+     * 【INSERT:1件】
+     * 新規会員情報を1件挿入する.
+     * 
+     * @param　会員登録画面で入力された新規会員情報
+     * @return デーブルにデータを挿入した件数
+     */
+	int updateUserInfo(UserInfo record);
 }
