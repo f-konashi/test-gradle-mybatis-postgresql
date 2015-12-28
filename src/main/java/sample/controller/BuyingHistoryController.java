@@ -62,8 +62,7 @@ public class BuyingHistoryController extends CommonController {
      * 購入履歴をソートします.
      * 
      * @param model
-     * @param orderby
-     *            ソート条件
+     * @param orderby ソート条件
      * @return ブラウザに表示するページ(buyinghistory.html)
      */
     @RequestMapping(value = { "sort/date/{condition}" })
