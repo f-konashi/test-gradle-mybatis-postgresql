@@ -68,4 +68,20 @@ public class UserInfoService {
     public int updateUser(UserInfo userInfo) {
         return userInfoMapper.updateUserInfo(userInfo);
     }
+    
+    /**
+     * 【SELECT】
+     * ログインIDが既に使用されているか確認します.
+     * 
+     * @param String ログインID
+     * @return　既に使用されている場合true
+     */
+    public boolean isUser(String loginId) {
+        UserInfo userInfo = userInfoMapper.selectByLoginId(loginId);
+        if(userInfo == null) {
+            return false;
+        }
+        return true;
+    }
+    
 }

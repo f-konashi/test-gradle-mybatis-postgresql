@@ -11,6 +11,7 @@ public class Message {
 	public static final String ERROR_SELECT = "選択されていません。";
 	public static final String ERROR_MINMAX_LENGTH = "5文字以上50文字以内で入力して下さい。";
 	public static final String ERROR_MAX_LENGTH = "50文字以内で入力して下さい。";
+	public static final String NOT_MATCH = "パスワードとパスワード(確認用)の入力内容が一致しません。";
 }
 
 // TODO: enumクラスで、もっとスマートに出来るか検討中

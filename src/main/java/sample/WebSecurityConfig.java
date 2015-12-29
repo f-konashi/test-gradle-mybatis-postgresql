@@ -12,6 +12,12 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import sample.security.MyUserDetailsService;
 
+/**
+ * ログイン認証を制御するクラスです.
+ * 
+ * @author f-konashi
+ *
+ */
 @SuppressWarnings("deprecation")
 @Configuration
 @EnableWebMvcSecurity
@@ -20,25 +26,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
    * 認証には関係ないメソッドです.
    * permitAll()しているURL以外にアクセスされた時、ログインページへ遷移して認証が求められるようにします.
    * 
-   * @param http http
-   * @throws Exception Exception
+   * @param http
+   * @throws Exception
    */
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-      .authorizeRequests() // 認証対象外のパスを設定する.
-        .antMatchers("/", "/index", "/input", "/addUser", "/regist")  // 認証対象外のパスを設定する.
-        .permitAll()  // 上記パスへのアクセスを許可する.
-        .anyRequest()  // その他のリクエストは認証がに必要.
+      .authorizeRequests()            // 認証対象外のパスを設定する.
+        .antMatchers(                 // 認証対象外のパスを設定する.
+                "/",
+                "index",
+                "/register/**")  
+        .permitAll()                  // 上記パスへのアクセスを許可する.
+        .anyRequest()                 // その他のリクエストは認証がに必要.
         .authenticated()
         .and()
       .formLogin()
-        .loginPage("/login")  // ログインフォームのパスを指定する(指定しない場合、デフォルトログインページが表示される).
-        .permitAll()  // 上記パスへのアクセスを許可する.
+        .loginPage("/login")          // ログインフォームのパスを指定する(指定しない場合、デフォルトログインページが表示される).
+        .permitAll()                  // 上記パスへのアクセスを許可する.
         .and()
       .logout()
-        .logoutUrl("/logout") // ログアウトページ.
-        .logoutSuccessUrl("/index")  // ログアウト成功時の遷移先パスを指定する(指定しない場合、ログインページが表示される).
+        .logoutUrl("/logout")         // ログアウトページ.
+        .logoutSuccessUrl("/index")   // ログアウト成功時の遷移先パスを指定する(指定しない場合、ログインページが表示される).
         .deleteCookies("JSESSIONID")  // ログアウト時にセッションIDをクッキーから削除する.
         .invalidateHttpSession(true)  // セッションを破棄する.
         .permitAll();
@@ -47,22 +56,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   /**
    * 認証の自動処理を呼び出すメソッドです.
    * 
-   * @param auth auth
-   * @throws Exception Exception
+   * @param auth
+   * @throws Exception
    */
   /*
   @Autowired
   public void configureGlobal1(AuthenticationManagerBuilder auth) throws Exception {
     //ユーザID・PWを設定する
     auth
-      .inMemoryAuthentication().withUser("user").password("password").roles("USER");
+      .inMemoryAuthentication()
+      .withUser("user")
+      .password("password")
+      .roles("USER");
   }
   */
+  
   /**
    * 認証の独自処理を呼び出すメソッドです.
    * 
-   * @param auth auth
-   * @throws Exception Exception
+   * @param auth
+   * @throws Exception
    * 
    */
   @Autowired
@@ -75,6 +88,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       .passwordEncoder(new StandardPasswordEncoder());
   }
 
+  /**
+   * 
+   * @return
+   */
   @Bean
   public UserDetailsService myUserDetailsService() {
     return new MyUserDetailsService();

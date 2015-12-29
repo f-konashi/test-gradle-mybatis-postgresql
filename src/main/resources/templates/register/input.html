@@ -7,12 +7,16 @@
 </head>
 <body>
 	<h1>会員登録画面(input.html)</h1>
-	<form th:action="@{/addUser}" th:object="${userInfoForm}" method="post">
+	<p th:if="${errorMessage != null}">
+	    <span class="ng" th:text="${errorMessage}"></span>
+	</p>
+	<form th:action="@{/register/addUser}" th:object="${userInfoForm}" method="post">
 		<table class="input_table">
 			<tr>
 				<th>名前</th>
 				<td>
-					<input type="text" th:field="*{name}" th:errorclass="fieldError" /></td>
+					<input type="text" th:field="*{name}" th:errorclass="fieldError" />
+				</td>
 				<td th:if="${#fields.hasErrors('*')}">
 					<span class="ng" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 					<span class="ok" th:if="${!#fields.hasErrors('name')}" th:text="OK"></span>
@@ -45,8 +49,20 @@
 					<input type="password" th:field="*{password}" th:errorclass="fieldError" />
 				</td>
 				<td th:if="${#fields.hasErrors('*')}">
+					<span class="ng" th:if="${#fields.hasErrors('validPassword')}" th:errors="*{validPassword}"></span>
 					<span class="ng" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
 					<span class="ok" th:if="${!#fields.hasErrors('password')}" th:text="OK"></span>
+			    </td>
+			</tr>
+			<tr>
+				<th>パスワード(確認用)</th>
+				<td>
+					<input type="password" th:field="*{confirmPassword}" th:errorclass="fieldError" />
+				</td>
+				<td th:if="${#fields.hasErrors('*')}">
+					<span class="ng" th:if="${#fields.hasErrors('validPassword')}" th:errors="*{validPassword}"></span>
+					<span class="ng" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+					<span class="ok" th:if="${!#fields.hasErrors('confirmPassword')}" th:text="OK"></span>
 			    </td>
 			</tr>
 		</table>

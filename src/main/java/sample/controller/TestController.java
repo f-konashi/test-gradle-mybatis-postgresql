@@ -4,14 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpSessionRequiredException;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -23,8 +21,6 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
-
-import sample.form.UserInfoForm;
 import sample.form.OrderInfoForm;
 import sample.model.BuyingHistory;
 import sample.model.UserInfo;
@@ -68,16 +64,6 @@ public class TestController extends CommonController {
 	// *********************************************************************
     // ModelAttributeメソッド一覧
     // *********************************************************************
-	/**
-	 * 会員登録画面で使用するフォームに対応したオブジェクトを初期化し、Modelに追加する
-	 * (Thymeleafからアクセスさせるために必要).
-	 * 
-	 * @return　会員登録画面でのフォーム入力値を格納するオブジェクト
-	 */
-	@ModelAttribute
-	UserInfoForm setupUserInfoForm() {
-		return new UserInfoForm();
-	}
 	
     /**
      * 決済ページ(orderform.html)で、入力フォームに対応したオブジェクトを初期化し、Modelに追加する.
@@ -106,34 +92,6 @@ public class TestController extends CommonController {
 		model.addAttribute("itemInfoList", getAllItemInfo());
 		return "index";
 	}
-	
-    /**
-     * 会員登録画面をブラウザに表示します.
-     * ※会員登録画面にて、フォーム入力値を格納すう為に使用している 「UserInfoFormオブジェクト」を使用可能にする為に必要なメソッド.
-     * ※「MvcConfigクラス」の「addViewControllersメソッド」を通すだけだと、
-     * {@literal @ModelAttribute}が反映しない為、「java.lang.IllegalStateException」がthrowされます.
-     * 
-     * @param model
-     * @return ブラウザに表示するページ(input.html)
-     */
-    @RequestMapping(value = "/input")
-    public String displayInput(Model model) {
-        return "input";
-    }
-	
-    /**
-     * 全会員情報をブラウザに表示します.
-     * 
-     * @param model
-     * @return ブラウザに表示するページ(serch.html)
-     */
-    @RequestMapping(value = "/serch")
-    public String displayAllUser(Model model) {
-        // 全会員情報を取得し、viewに渡す.
-        List<UserInfo> userInfoList = userInfoService.getUserAll();
-        model.addAttribute("userInfoList", userInfoList);
-        return "serch";
-    }
     
     /**
      * 買い物かご画面をブラウザに表示します.
@@ -154,18 +112,7 @@ public class TestController extends CommonController {
     }
     
     /**
-     * 会員登録完了画面をブラウザに表示します.
-     * 
-     * @param model
-     * @return ブラウザに表示するページ(regist.html)
-     */
-    @RequestMapping(value = "/regist")
-    public String displayRegist(Model model) {
-        return "regist";
-    }
-    
-    /**
-     * 会員登録完了画面をブラウザに表示します.
+     * 注文完了画面をブラウザに表示します.
      * 
      * @param model
      * @return ブラウザに表示するページ(ordercomplete.html)
@@ -178,47 +125,6 @@ public class TestController extends CommonController {
     // *********************************************************************
     // redirectメソッド一覧
     // *********************************************************************
-    
-	/**
-	 * 会員情報を登録し、登録完了画面をブラウザに表示します.
-	 * 
-	 * @param model
-	 * @return リダイレクト先
-	 * ※フォーム入力値のバリデーションエラーがあった場合は、元の入力画面を表示する.
-	 */
-	@RequestMapping(value = "/addUser", method = RequestMethod.POST)
-	public String insertOne(RedirectAttributes redirectAttributes,
-	        @Valid UserInfoForm inputUserInfo, BindingResult result) {
-	    
-		// フォーム入力値をチェックし、エラーがあれば会員登録ページにエラーを表示させる.
-		if (result.hasErrors()) {
-		    logger.error("入力エラー");
-//			for (FieldError err : result.getFieldErrors()) {
-//				// log.debug("error code = [" + err.getCode() + "]");
-//			    
-//				System.out.println(err);
-//			}
-	        return "/input";
-		}
-
-		// 入力されたデータを、エンティティークラスに格納する.
-		UserInfo userInfo = new UserInfo();
-		userInfo.setName(inputUserInfo.getName());
-		userInfo.setGender(inputUserInfo.getGender());
-		userInfo.setLoginId(inputUserInfo.getLoginId());
-		userInfo.setEnabled(true);
-
-		// パスワードは、エンティティクラスに登録する前にハッシュ化する.
-		// userInfo.setPassword(password); ← ハッシュ化しない
-		// userInfo.setPassword(new
-		// ShaPasswordEncoder(256).encodePassword(password, null));
-		userInfo.setPassword(new StandardPasswordEncoder().encode(inputUserInfo.getPassword()));
-        userInfoService.registerUser(userInfo);
-		
-		// 入力されたデータをリダイレクト先でも利用可能にする。
-		redirectAttributes.addFlashAttribute("userInfo", userInfo);
-        return "redirect:/regist";
-	}
 
 	/**
 	 * 「買い物かごに入れる」ボタンがクリックされた商品を、その会員の買い物かごに登録し、買い物かご画面にリダイレクトします.
@@ -376,4 +282,22 @@ public class TestController extends CommonController {
 	private List<ItemInfoEx> getAllItemInfoInCart(Integer userId) {
 		return itemInCartService.getItemInCart(userId);
 	}
+	
+	   // *********************************************************************
+    // その他(TEST)メソッド一覧
+    // *********************************************************************
+	
+    /**
+     * 全会員情報をブラウザに表示します.
+     * 
+     * @param model
+     * @return ブラウザに表示するページ(serch.html)
+     */
+    @RequestMapping(value = "/serch")
+    public String displayAllUser(Model model) {
+        // 全会員情報を取得し、viewに渡す.
+        List<UserInfo> userInfoList = userInfoService.getUserAll();
+        model.addAttribute("userInfoList", userInfoList);
+        return "serch";
+    }
 }
