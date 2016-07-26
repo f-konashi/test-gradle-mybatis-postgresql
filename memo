@@ -1,0 +1,48 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
+
+public class FileTest {
+
+    public static void main(String[] args) {
+        FileSystem fileSystem = FileSystems.getDefault();
+        Path path2 = fileSystem.getPath("..");
+        Path fileName = path2.getFileName();
+        System.out.println(fileName);
+
+        System.out.println(File.separator);
+
+        // カレントディレクトリのファイルの一覧を返すStreamを取得する
+        // http://news.mynavi.jp/special/2014/java8/006.html
+        System.out.println("----- Stream ----");
+        try(Stream<Path> stream = Files.list(Paths.get("./files"))){
+            stream.forEach(path -> {
+                System.out.println(path);
+                System.out.println(path.getFileName().toString());
+            });
+        } catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
+
+        //NIO.2のDirectoryStreamを使用
+        System.out.println("----- DirectoryStream ----");
+        try (DirectoryStream<Path> entries = Files.newDirectoryStream(Paths.get("./files"))) {
+            entries.forEach(System.out::println);
+
+            entries.forEach(path -> {
+            	System.out.println(path);
+
+            });
+        } catch (IOException ex) {
+            // ...
+        }
+    }
+
+}
